@@ -8,21 +8,24 @@ import java.util.Map;
 @Setter
 
 public class Room {
+    private String name;
     private int capacity;
     private int PCNumber;
     private boolean projector;
     private boolean graphicsTable;
-    private Map<String, String> dodatniPodaci;
+    private Map<String, String> additionalData;
 
-    public Room(int capacity, int PCNumber, boolean projector, boolean graphicsTable, Map<String, String> dodatniPodaci) {
+    public Room(String name, int capacity, int PCNumber, boolean projector, boolean graphicsTable, Map<String, String> additionalData) {
+        this.name = name;
         this.capacity = capacity;
         this.PCNumber = PCNumber;
         this.projector = projector;
         this.graphicsTable = graphicsTable;
-        this.dodatniPodaci = dodatniPodaci;
+        this.additionalData = additionalData;
     }
 
-    public Room(int capacity, int PCNumber, boolean projector, boolean graphicsTable) {
+    public Room(String name, int capacity, int PCNumber, boolean projector, boolean graphicsTable) {
+        this.name = name;
         this.capacity = capacity;
         this.PCNumber = PCNumber;
         this.projector = projector;

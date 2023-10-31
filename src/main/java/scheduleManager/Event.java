@@ -17,9 +17,34 @@ public class Event {
     private Time startTime;
     private Time endTime;
     private DayOfWeek dayOfWeek;
+    private String professor;
+    private String subject;
+    private String type;
+    private String group;
+    private Map<String, String > additionalData;
 
+    public Event(Date date, Room room, Time startTime, Time endTime, DayOfWeek dayOfWeek, String professor, String subject, String type, String group, Map<String, String > additionalData) {
+        this.date = date;
+        this.room = room;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.dayOfWeek = dayOfWeek;
+        this.professor = professor;
+        this.subject = subject;
+        this.type = type;
+        this.group = group;
+        this.additionalData = additionalData;
+    }
 
-    Map<String, String> getAdditionalData() {
-        return null;
+    public Event(Date date, Room room, Time startTime, Time endTime, DayOfWeek dayOfWeek, String professor, String subject, String type, String group) {
+        this.date = date;
+        this.room = room;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.dayOfWeek = dayOfWeek;
+        this.professor = professor;
+        this.subject = subject;
+        this.type = type;
+        this.group = group;
     }
 }
