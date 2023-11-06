@@ -23,6 +23,7 @@ public class Event {
     private String group;
     private Map<String, String > additionalData;
 
+
     public Event(Date date, Room room, Time startTime, Time endTime, DayOfWeek dayOfWeek, String professor, String subject, String type, String group, Map<String, String > additionalData) {
         this.date = date;
         this.room = room;
@@ -47,4 +48,6 @@ public class Event {
         this.type = type;
         this.group = group;
     }
+
+
 }

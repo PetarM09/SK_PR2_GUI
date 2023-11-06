@@ -31,4 +31,7 @@ public class Room {
         this.projector = projector;
         this.graphicsTable = graphicsTable;
     }
+
+    public Room() {
+    }
 }

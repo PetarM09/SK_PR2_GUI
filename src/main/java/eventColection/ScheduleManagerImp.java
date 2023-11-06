@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ScheduleManagerImp extends ScheduleManager {
-    Schedule schedule;
-    @Override
+
+    /*@Override
     public boolean addEvent(String input) {
         Event event = parser(input);
         List<Event> lista = this.schedule.getSchedule().get(event.getDayOfWeek());
@@ -46,21 +46,11 @@ public class ScheduleManagerImp extends ScheduleManager {
                 lista.remove(event);
         }
 
-    }
-
-    @Override
-    public void addRoom(Room room) {
-
-    }
-
-    @Override
-    public void removeRoom(Room room) {
-
-    }
+    }*/
 
     @Override
     public void initializeSchedule() {
-        this.schedule = new Schedule();
+        //this.schedule = new Schedule();
     }
 
     @Override
@@ -79,10 +69,6 @@ public class ScheduleManagerImp extends ScheduleManager {
         return false;
     }
 
-    @Override
-    public boolean loadScheduleFromFile(String filePath) {
-        return false;
-    }
 
     @Override
     public boolean saveScheduleToFile(String filePath) {

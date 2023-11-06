@@ -26,16 +26,6 @@ public class ScheduleManagerImp extends ScheduleManager {
     }
 
     @Override
-    public void addRoom(Room room) {
-
-    }
-
-    @Override
-    public void removeRoom(Room room) {
-
-    }
-
-    @Override
     public void initializeSchedule() {
 
     }
@@ -56,10 +46,6 @@ public class ScheduleManagerImp extends ScheduleManager {
         return false;
     }
 
-    @Override
-    public boolean loadScheduleFromFile(String filePath) {
-        return false;
-    }
 
     @Override
     public boolean saveScheduleToFile(String filePath) {
