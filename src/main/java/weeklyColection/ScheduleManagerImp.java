@@ -2,6 +2,7 @@ package weeklyColection;
 
 import scheduleManager.Event;
 import scheduleManager.Room;
+import scheduleManager.Schedule;
 import scheduleManager.ScheduleManager;
 
 import java.sql.Time;
@@ -27,7 +28,8 @@ public class ScheduleManagerImp extends ScheduleManager {
 
     @Override
     public void initializeSchedule() {
-
+        Schedule schedule = new Schedule();
+        this.schedule = schedule;
     }
 
     @Override

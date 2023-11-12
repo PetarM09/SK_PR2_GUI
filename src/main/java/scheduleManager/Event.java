@@ -6,6 +6,7 @@ import lombok.Setter;
 import java.sql.Time;
 import java.time.DayOfWeek;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @Setter
@@ -17,37 +18,46 @@ public class Event {
     private Time startTime;
     private Time endTime;
     private DayOfWeek dayOfWeek;
-    private String professor;
-    private String subject;
-    private String type;
-    private String group;
     private Map<String, String > additionalData;
 
 
-    public Event(Date date, Room room, Time startTime, Time endTime, DayOfWeek dayOfWeek, String professor, String subject, String type, String group, Map<String, String > additionalData) {
+    public Event(Date date, Room room, Time startTime, Time endTime, DayOfWeek dayOfWeek, Map<String, String > additionalData) {
+        this.additionalData = new HashMap<>();
         this.date = date;
         this.room = room;
         this.startTime = startTime;
         this.endTime = endTime;
         this.dayOfWeek = dayOfWeek;
-        this.professor = professor;
-        this.subject = subject;
-        this.type = type;
-        this.group = group;
         this.additionalData = additionalData;
     }
 
-    public Event(Date date, Room room, Time startTime, Time endTime, DayOfWeek dayOfWeek, String professor, String subject, String type, String group) {
+    public Event(Date date, Room room, Time startTime, Time endTime, DayOfWeek dayOfWeek) {
+        this.additionalData = new HashMap<>();
         this.date = date;
         this.room = room;
         this.startTime = startTime;
         this.endTime = endTime;
         this.dayOfWeek = dayOfWeek;
-        this.professor = professor;
-        this.subject = subject;
-        this.type = type;
-        this.group = group;
     }
 
+    public Event(Room room, Time startTime, Time endTime, DayOfWeek dayOfWeek) {
+        this.additionalData = new HashMap<>();
+        this.room = room;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.dayOfWeek = dayOfWeek;
+        this.additionalData = additionalData;
+    }
 
+    @Override
+    public String toString() {
+        return "Event{" +
+                "date=" + date +
+                ", room=" + room +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", dayOfWeek=" + dayOfWeek +
+                ", additionalData=" + additionalData +
+                '}';
+    }
 }

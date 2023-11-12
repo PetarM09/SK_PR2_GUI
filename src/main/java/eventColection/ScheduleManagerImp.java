@@ -1,15 +1,13 @@
 package eventColection;
 
-import scheduleManager.Criteria;
-import scheduleManager.Event;
-import scheduleManager.Room;
-import scheduleManager.ScheduleManager;
+import lombok.Getter;
+import scheduleManager.*;
 
 import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
+@Getter
 public class ScheduleManagerImp extends ScheduleManager {
 
     /*@Override
@@ -50,7 +48,8 @@ public class ScheduleManagerImp extends ScheduleManager {
 
     @Override
     public void initializeSchedule() {
-        //this.schedule = new Schedule();
+        Schedule schedule = new Schedule();
+        this.schedule = schedule;
     }
 
     @Override
