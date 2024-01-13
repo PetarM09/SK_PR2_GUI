@@ -2,13 +2,14 @@ package org.example.view;
 
 import org.example.model.TerminiTableModel;
 import org.example.restClient.UserServiceClient;
+import org.example.restClient.dto.KorisnikKlijentDTO;
 import org.example.restClient.dto.TerminTreningaListDto;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-public class TerminiView extends JPanel {
+public class KlijentView extends JPanel {
     private JToolBar toolBar;
     private JPanel desktop;
     private JTable jTable;
@@ -16,10 +17,10 @@ public class TerminiView extends JPanel {
 
     private JSplitPane leftSplit;
 
-    private ToolPanel toolPanel;
+    private KlijentToolPanel klijentToolPanel;
 
     private UserServiceClient userServiceClient;
-    public TerminiView() {
+    public KlijentView(){
         userServiceClient = new UserServiceClient();
 
         this.toolBar = new Toolbar();
@@ -28,34 +29,38 @@ public class TerminiView extends JPanel {
         this.desktop = new JPanel();
         this.desktop.setLayout(new BorderLayout());
 
-        //Tools panel
-        this.toolPanel = new ToolPanel();
 
-        JLabel jLabel = new JLabel();
+        KorisnikKlijentDTO k = userServiceClient.getPodaci();
+        this.klijentToolPanel = new KlijentToolPanel("Korisnik : " + k.getIme() + " " + k.getPrezime());
 
-        //Left split
-        this.leftSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jLabel, toolPanel);
-
-        //JTable
-        jTable = new JTable();
+        terminiTableModel = new TerminiTableModel();
+        jTable = new JTable(terminiTableModel);
         jTable.setFillsViewportHeight(true);
         jTable.setRowSelectionAllowed(true);
         jTable.setColumnSelectionAllowed(false);
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftSplit, new JScrollPane(jTable));
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, klijentToolPanel, new JScrollPane(jTable));
 
         this.add(splitPane,BorderLayout.CENTER);
         setVisible(true);
     }
 
     public void init() throws IOException {
+
         this.setVisible(true);
 
         TerminTreningaListDto terminTreningaListDto = userServiceClient.getTreninzi();
-//        terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
-//            System.out.println(terminTreningaDto);
-//            terminiTableModel.addRow(new Object[]{"OVDE IDU PODACI REDOM"});
-//        });
+        terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
+            System.out.println(terminTreningaDto.toString());
+
+            terminiTableModel.addRow(new Object[]{
+                    terminTreningaDto.getNazivSale(),
+                    terminTreningaDto.getNazivTreninga(),
+                    terminTreningaDto.getDatum(),
+                    terminTreningaDto.getVremePocetka(),
+                    terminTreningaDto.getMaksimalanBrojUcesnika()});
+        });
+        KorisnikKlijentDTO k = userServiceClient.getPodaci();
 
     }
 
@@ -99,12 +104,12 @@ public class TerminiView extends JPanel {
         this.leftSplit = leftSplit;
     }
 
-    public ToolPanel getToolPanel() {
-        return toolPanel;
+    public KlijentToolPanel getToolPanel() {
+        return klijentToolPanel;
     }
 
-    public void setToolPanel(ToolPanel toolPanel) {
-        this.toolPanel = toolPanel;
+    public void setToolPanel(KlijentToolPanel klijentToolPanel) {
+        this.klijentToolPanel = klijentToolPanel;
     }
 
     public UserServiceClient getUserServiceClient() {

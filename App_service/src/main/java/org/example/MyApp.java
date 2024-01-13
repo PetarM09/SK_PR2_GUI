@@ -1,45 +1,43 @@
 package org.example;
 
-import org.example.view.LoginView;
-import org.example.view.TerminiView;
+import org.example.view.*;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MyApp extends JFrame {
+    private static MyApp instance = null;
     public static String apiUrl = "http://localhost:8080/";
     private String token;
     private LoginView loginView;
-    private TerminiView terminiView;
+    private KlijentView klijentView;
+    private AdminView adminView;
+    private MenadzerView menadzerView;
+    private RegisterView registerView;
 
-    private MyApp() throws IllegalAccessException, NoSuchMethodException{
+    private JPanel jPanel;
+
+    private MyApp(){
         this.setTitle("App");
         this.setSize(1200, 1200);
+        this.jPanel = new JPanel();
         this.setLayout(new BorderLayout());
 
         loginView = new LoginView();
-        this.add(loginView, BorderLayout.NORTH);
+        registerView = new RegisterView();
 
-        terminiView = new TerminiView();
-        terminiView.setVisible(false);
-        this.add(terminiView, BorderLayout.CENTER);
+        jPanel.add(loginView);
+        this.add(jPanel,BorderLayout.CENTER);
 
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private static class InstanceHolder {
-        private static MyApp instance;
-
-        static {
-            try {
-                instance = new MyApp();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
+    public static MyApp getInstance(){
+        if (instance == null){
+            instance = new MyApp();
         }
+        return instance;
     }
 
     public String getToken() {
@@ -58,13 +56,47 @@ public class MyApp extends JFrame {
         this.loginView = loginView;
     }
 
-    public TerminiView getTerminiView() {
-        return terminiView;
+    public KlijentView getKlijentView() {
+        return klijentView;
     }
 
-    public void setTerminiView(TerminiView terminiView) {
-        this.terminiView = terminiView;
+    public void setTerminiView(KlijentView klijentView) {
+        this.klijentView = klijentView;
     }
 
-    public static MyApp getInstance(){return InstanceHolder.instance;}
+    public void setKlijentView(KlijentView klijentView) {
+        this.klijentView = klijentView;
+    }
+
+    public AdminView getAdminView() {
+        return adminView;
+    }
+
+    public void setAdminView(AdminView adminView) {
+        this.adminView = adminView;
+    }
+
+    public MenadzerView getMenadzerView() {
+        return menadzerView;
+    }
+
+    public void setMenadzerView(MenadzerView menadzerView) {
+        this.menadzerView = menadzerView;
+    }
+
+    public RegisterView getRegisterView() {
+        return registerView;
+    }
+
+    public void setRegisterView(RegisterView registerView) {
+        this.registerView = registerView;
+    }
+
+    public JPanel getjPanel() {
+        return jPanel;
+    }
+
+    public void setjPanel(JPanel jPanel) {
+        this.jPanel = jPanel;
+    }
 }

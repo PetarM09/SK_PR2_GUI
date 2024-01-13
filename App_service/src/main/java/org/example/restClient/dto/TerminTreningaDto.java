@@ -10,6 +10,8 @@ public class TerminTreningaDto {
     private Date datum;
     private Time vremePocetka;
     private Integer maksimalanBrojUcesnika;
+    private String nazivSale;
+    private String nazivTreninga;
 
     public Long getId() {
         return id;
@@ -57,5 +59,35 @@ public class TerminTreningaDto {
 
     public void setMaksimalanBrojUcesnika(Integer maksimalanBrojUcesnika) {
         this.maksimalanBrojUcesnika = maksimalanBrojUcesnika;
+    }
+
+    @Override
+    public String toString() {
+        return "TerminTreningaDto{" +
+                "id=" + id +
+                ", idSale=" + idSale +
+                ", idTreninga=" + idTreninga +
+                ", datum=" + datum +
+                ", vremePocetka=" + vremePocetka +
+                ", maksimalanBrojUcesnika=" + maksimalanBrojUcesnika +
+                ", nazivSale='" + nazivSale + '\'' +
+                ", nazivTreninga='" + nazivTreninga + '\'' +
+                '}';
+    }
+
+    public String getNazivSale() {
+        return nazivSale;
+    }
+
+    public void setNazivSale(String nazivSale) {
+        this.nazivSale = nazivSale;
+    }
+
+    public String getNazivTreninga() {
+        return nazivTreninga;
+    }
+
+    public void setNazivTreninga(String nazivTreninga) {
+        this.nazivTreninga = nazivTreninga;
     }
 }

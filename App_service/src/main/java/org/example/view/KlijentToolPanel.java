@@ -1,18 +1,20 @@
 package org.example.view;
 
-import org.example.MyApp;
-
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ToolPanel extends JPanel {
+public class KlijentToolPanel extends JPanel {
 
     private JPanel toolPanel;
     private JPanel actionPanel;
+    private String podaci = "";
 
-    public ToolPanel(){
+    public KlijentToolPanel(String podaci){
         setBoxLayout();
+        this.podaci = podaci;
         this.actionPanel = new JPanel();
-        this.add(actionPanel());
+        this.add(actionPanel(podaci));
     }
 
     private void setBoxLayout(){
@@ -20,10 +22,10 @@ public class ToolPanel extends JPanel {
         this.setLayout(boxLayout);
     }
 
-    private JPanel actionPanel(){
+    private JPanel actionPanel(String podaci){
         BoxLayout layout = new BoxLayout(actionPanel,BoxLayout.Y_AXIS);
         actionPanel.setLayout(layout);
-        JLabel label = new JLabel("Akcije");
+        JLabel label = new JLabel(podaci);
 
         JButton create = new JButton("1");
 
@@ -42,6 +44,27 @@ public class ToolPanel extends JPanel {
         return actionPanel;
     }
 
+    public JPanel getToolPanel() {
+        return toolPanel;
+    }
 
+    public void setToolPanel(JPanel toolPanel) {
+        this.toolPanel = toolPanel;
+    }
 
+    public JPanel getActionPanel() {
+        return actionPanel;
+    }
+
+    public void setActionPanel(JPanel actionPanel) {
+        this.actionPanel = actionPanel;
+    }
+
+    public String getPodaci() {
+        return podaci;
+    }
+
+    public void setPodaci(String podaci) {
+        this.podaci = podaci;
+    }
 }

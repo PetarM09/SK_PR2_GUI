@@ -22,6 +22,7 @@ public class LoginView extends JPanel {
     private JPasswordField passwordField;
 
     private JButton loginButton;
+    private JButton registerButton;
 
     private UserServiceClient userServiceRestClient = new UserServiceClient();
 
@@ -39,6 +40,9 @@ public class LoginView extends JPanel {
 
         loginButton = new JButton("Login");
         this.add(loginButton, BorderLayout.SOUTH);
+
+        registerButton = new JButton("Register");
+        this.add(registerButton, BorderLayout.LINE_END);
 
         loginButton.addActionListener(e -> {
             String email = emailField.getText();
@@ -58,9 +62,31 @@ public class LoginView extends JPanel {
                 HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == 200) {
                     this.setVisible(false);
-                    MyApp.getInstance().getTerminiView().init();
+
                     String[] strings = response.body().split("\":\"");
                     MyApp.getInstance().setToken(strings[1].replaceAll("[\"}]",""));
+                    String role;
+
+                    request = HttpRequest.newBuilder()
+                            .uri(URI.create(MyApp.apiUrl+ "api/korisnici/getUserRole"))
+                            .header("Content-Type", "application/json")
+                            .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                            .build();
+
+                    response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                    if(response.body().contains("ADMIN")) {
+                        MyApp.getInstance().intView("ADMIN");
+                        MyApp.getInstance().getAdminView().init();
+                    }
+                    else if(response.body().contains("MENADZER")) {
+                        MyApp.getInstance().intView("MENADZER");
+                        MyApp.getInstance().getMenadzerView().init();
+                    }
+                    else {
+                        MyApp.getInstance().intView("KORISNIK");
+                        MyApp.getInstance().getKlijentView().init();
+                    }
                 } else if (response.statusCode() == 403) {
                     JOptionPane.showMessageDialog(this, "Zabranjen pristup", "Greška", JOptionPane.ERROR_MESSAGE);
                 } else {
@@ -69,6 +95,16 @@ public class LoginView extends JPanel {
             } catch (InterruptedException | IOException ex) {
                 ex.printStackTrace();
             }
+        });
+
+        registerButton.addActionListener(e -> {
+            MyApp.getInstance().getjPanel().remove(MyApp.getInstance().getLoginView());
+            MyApp.getInstance().getLoginView().setVisible(false);
+            MyApp.getInstance().getjPanel().add(MyApp.getInstance().getRegisterView());
+            MyApp.getInstance().getRegisterView().setVisible(true);
+            MyApp.getInstance().getjPanel().revalidate();
+
+
         });
     }
 
