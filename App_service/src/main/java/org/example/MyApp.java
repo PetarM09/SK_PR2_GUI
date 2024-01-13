@@ -33,6 +33,22 @@ public class MyApp extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    public void intView(String role){
+        if(role.equals("ADMIN")){
+            adminView = new AdminView();
+            adminView.setVisible(false);
+            this.add(adminView, BorderLayout.CENTER);
+        }else if(role.equals("MENADZER")){
+            menadzerView = new MenadzerView();
+            menadzerView.setVisible(false);
+            this.add(menadzerView, BorderLayout.CENTER);
+        }else{
+            klijentView = new KlijentView();
+            klijentView.setVisible(false);
+            this.add(klijentView, BorderLayout.CENTER);
+        }
+    }
+
     public static MyApp getInstance(){
         if (instance == null){
             instance = new MyApp();

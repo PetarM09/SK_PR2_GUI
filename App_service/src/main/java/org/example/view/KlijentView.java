@@ -8,6 +8,7 @@ import org.example.restClient.dto.TerminTreningaListDto;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.List;
 
 public class KlijentView extends JPanel {
     private JToolBar toolBar;
