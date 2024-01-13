@@ -2,7 +2,7 @@ package org.example.view;
 
 import org.example.model.TerminiTableModel;
 import org.example.restClient.UserServiceClient;
-import org.example.restClient.dto.TreningListDto;
+import org.example.restClient.dto.TerminTreningaListDto;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +20,7 @@ public class TerminiView extends JPanel {
 
     private UserServiceClient userServiceClient;
     public TerminiView() {
-
+        userServiceClient = new UserServiceClient();
 
         this.toolBar = new Toolbar();
         add(toolBar,BorderLayout.NORTH);
@@ -51,11 +51,11 @@ public class TerminiView extends JPanel {
     public void init() throws IOException {
         this.setVisible(true);
 
-        TreningListDto treningListDto = userServiceClient.getTreninzi();
-        treningListDto.getContent().forEach(terminTreningaDto -> {
-            System.out.println(terminTreningaDto);
-            terminiTableModel.addRow(new Object[]{"OVDE IDU PODACI REDOM"});
-        });
+        TerminTreningaListDto terminTreningaListDto = userServiceClient.getTreninzi();
+//        terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
+//            System.out.println(terminTreningaDto);
+//            terminiTableModel.addRow(new Object[]{"OVDE IDU PODACI REDOM"});
+//        });
 
     }
 

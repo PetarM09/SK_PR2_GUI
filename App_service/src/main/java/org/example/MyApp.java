@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MyApp extends JFrame {
+    public static String apiUrl = "http://localhost:8080/";
     private String token;
     private LoginView loginView;
     private TerminiView terminiView;

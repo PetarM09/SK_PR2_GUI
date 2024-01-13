@@ -3,13 +3,13 @@ package org.example.restClient.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TreningListDto {
+public class TerminTreningaListDto {
     private List<TerminTreningaDto> content = new ArrayList<>();
 
-    public TreningListDto() {
+    public TerminTreningaListDto() {
     }
 
-    public TreningListDto(List<TerminTreningaDto> content) {
+    public TerminTreningaListDto(List<TerminTreningaDto> content) {
         this.content = content;
     }
 

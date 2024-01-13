@@ -1,13 +1,12 @@
 package org.example.model;
 
-import org.example.restClient.dto.TerminTreningaDto;
-import org.example.restClient.dto.TreningListDto;
+import org.example.restClient.dto.TerminTreningaListDto;
 
 import javax.swing.table.DefaultTableModel;
 
 public class TerminiTableModel extends DefaultTableModel {
 
-    private TreningListDto treningListDto = new TreningListDto();
+    private TerminTreningaListDto terminTreningaListDto = new TerminTreningaListDto();
 
     public TerminiTableModel() throws IllegalAccessException, NoSuchMethodException{
             super(new String[]{"Fiskulturna sala", "Tip treninga", "Datum", "Vreme pocetka", "Maksimalni broj ucesnika"},0);
