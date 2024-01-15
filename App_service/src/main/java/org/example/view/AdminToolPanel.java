@@ -55,17 +55,21 @@ public class AdminToolPanel extends JPanel {
 
     public void actions(){
         this.izlistajKorisnike.addActionListener(e -> {
-
+            MyApp.getInstance().getAdminView().KorisniciListTable();
         });
 
         this.izlistajZakazaneTermine.addActionListener(e -> {
             try {
-                System.out.println("Izlistaj zakazane termine");
                 MyApp.getInstance().getAdminView().initTerminListTable();
-                System.out.println("Izlistaj zakazane termine ispod");
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+        });
+        this.zabraniKorisnikuPristup.addActionListener(e -> {
+            MyApp.getInstance().getAdminView().zabraniPristup();
+        });
+        this.odobriKorisnikuPristup.addActionListener(e -> {
+            MyApp.getInstance().getAdminView().odobriPristup();
         });
     }
 

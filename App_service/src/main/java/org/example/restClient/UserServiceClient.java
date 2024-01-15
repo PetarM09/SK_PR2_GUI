@@ -18,6 +18,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 public class UserServiceClient {
     public static final MediaType JSON
@@ -113,6 +114,84 @@ public class UserServiceClient {
             throw new RuntimeException(e);
         }
         return korisnikKlijentDTO;
+    }
+
+    public KorisniciListaDto getKorisnici() {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/korisnici"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            JSONObject jsonResponse = new JSONObject(response.body());
+            JSONArray jsonArray = jsonResponse.getJSONArray("content");
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            KorisniciListaDto korisniciListaDto = new KorisniciListaDto();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object1 = jsonArray.getJSONObject(i);
+                int id = object1.getInt("id");
+                String username = object1.getString("username");
+                String ime = object1.getString("ime");
+                String prezime = object1.getString("prezime");
+                String email = object1.getString("email");
+                String datum = object1.getString("datumRodjenja").substring(0,10);
+
+                KorisniciDto korisniciDto = new KorisniciDto();
+                korisniciDto.setId(id);
+                korisniciDto.setUsername(username);
+                korisniciDto.setIme(ime);
+                korisniciDto.setPrezime(prezime);
+                korisniciDto.setEmail(email);
+
+                request = HttpRequest.newBuilder()
+                        .uri(URI.create("http://localhost:8080/api/admin/pristupi/" + id))
+                        .header("Content-Type", "application/json")
+                        .build();
+                response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                korisniciDto.setZabranjenPristup(Boolean.parseBoolean(response.body()));
+
+                korisniciDto.setDatumRodjenja(LocalDate.parse(datum));
+                korisniciListaDto.getContent().add(korisniciDto);
+            }
+            return korisniciListaDto;
+        } catch (InterruptedException | IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public void zabraniPistup(KorisniciDto korisniciDto){
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/admin/zabrani-pristup/" + korisniciDto.getId()))
+                .header("Content-Type", "application/json")
+                .build();
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200){
+                JOptionPane.showMessageDialog(null, "Uspesno ste zabranili pristup korisniku");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void odobriPristup(KorisniciDto korisniciDto){
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/admin/odobri-pristup/" + korisniciDto.getId()))
+                .header("Content-Type", "application/json")
+                .build();
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200){
+                JOptionPane.showMessageDialog(null, "Uspesno ste odobrili pristup korisniku");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private Long getKorisnikId(){

@@ -4,6 +4,7 @@ import org.example.MyApp;
 import org.example.model.KorisniciModel;
 import org.example.model.TerminiTableModel;
 import org.example.restClient.UserServiceClient;
+import org.example.restClient.dto.KorisniciListaDto;
 import org.example.restClient.dto.KorisnikKlijentDTO;
 import org.example.restClient.dto.TerminTreningaListDto;
 
@@ -45,6 +46,7 @@ public class AdminView extends JPanel {
         jTable.setRowSelectionAllowed(true);
         jTable.setColumnSelectionAllowed(false);
 
+
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, adminToolPanel, new JScrollPane(jTable));
 
         this.add(splitPane,BorderLayout.CENTER);
@@ -52,8 +54,9 @@ public class AdminView extends JPanel {
 
     public void initTerminListTable() throws IOException {
         TerminTreningaListDto terminTreningaListDto = userServiceClient.getTreninzi();
+        terminiTableModel.removeRows();
+        terminiTableModel.getTerminTreningaListDto().getContent().clear();
         terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
-
             terminiTableModel.addRow(new Object[]{
                     terminTreningaDto.getNazivSale(),
                     terminTreningaDto.getNazivTreninga(),
@@ -61,9 +64,46 @@ public class AdminView extends JPanel {
                     terminTreningaDto.getVremePocetka(),
                     terminTreningaDto.getMaksimalanBrojUcesnika()});
         });
-        KorisnikKlijentDTO k = userServiceClient.getPodaci();
-        setVisible(true);
+        jTable.setModel(terminiTableModel);
         MyApp.getInstance().refreshPanel();
+    }
+
+    public void KorisniciListTable(){
+        KorisniciListaDto korisniciListaDto = userServiceClient.getKorisnici();
+        korisniciTableModel.removeRows();
+        korisniciTableModel.getKorisniciListaDto().getContent().clear();
+        korisniciListaDto.getContent().forEach(korisniciDto -> {
+            korisniciTableModel.addRow(new Object[]{
+                    korisniciDto.getId(),
+                    korisniciDto.getIme(),
+                    korisniciDto.getPrezime(),
+                    korisniciDto.getEmail(),
+                    korisniciDto.getUsername(),
+                    korisniciDto.getDatumRodjenja(),
+                    korisniciDto.isZabranjenPristup()
+                    });
+            });
+        jTable.setModel(korisniciTableModel);
+        MyApp.getInstance().refreshPanel();
+    }
+    public void zabraniPristup() {
+        korisniciTableModel.getKorisniciListaDto().getContent().forEach(korisniciDto -> {
+            if (korisniciDto.getId().equals(jTable.getValueAt(jTable.getSelectedRow(),0))){
+                korisniciDto.setZabranjenPristup(true);
+                userServiceClient.zabraniPistup(korisniciDto);
+            }
+        });
+        KorisniciListTable();
+    }
+
+    public void odobriPristup() {
+        korisniciTableModel.getKorisniciListaDto().getContent().forEach(korisniciDto -> {
+            if (korisniciDto.getId().equals(jTable.getValueAt(jTable.getSelectedRow(),0))){
+                korisniciDto.setZabranjenPristup(false);
+                userServiceClient.odobriPristup(korisniciDto);
+            }
+        });
+        KorisniciListTable();
     }
 
     public JToolBar getToolBar() {
@@ -121,4 +161,6 @@ public class AdminView extends JPanel {
     public void setUserServiceClient(UserServiceClient userServiceClient) {
         this.userServiceClient = userServiceClient;
     }
+
+
 }

@@ -20,6 +20,15 @@ public class KorisniciDto{
     private String ime;
 
     private String prezime;
+    private boolean zabranjenPristup;
+
+    public boolean isZabranjenPristup() {
+        return zabranjenPristup;
+    }
+
+    public void setZabranjenPristup(boolean zabranjenPristup) {
+        this.zabranjenPristup = zabranjenPristup;
+    }
 
     public void setId(Integer id) {
         this.id = id;
