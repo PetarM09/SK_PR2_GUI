@@ -33,9 +33,53 @@ public class UserServiceClient {
         httpClient = HttpClient.newHttpClient();
     }
 
+    public TerminTreningaListDto getSviZakazaniTreninzi(){
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/api/termin-treninga/izlistaj-Termine-sve"))
+                .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                .build();
 
-    public TerminTreningaListDto getTreninzi(){
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
+            JSONArray jsonArray = new JSONArray(response.body());
 
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            TerminTreningaListDto terminTreningaListDto = new TerminTreningaListDto();
+            for (int i = 0 ; i < jsonArray.length(); i++){
+                JSONObject object1 = jsonArray.getJSONObject(i);
+                int id = object1.getInt("id");
+                int salaId = object1.getJSONObject("sala").getInt("id");
+                String salaIme = object1.getJSONObject("sala").getString("ime");
+                int tipTreningaId = object1.getJSONObject("tipTreninga").getInt("id");
+                String tipTreningaNaziv = object1.getJSONObject("tipTreninga").getString("naziv");
+                String datum = object1.getString("datum").substring(0,10);
+                String vremePocetka = object1.getString("vremePocetka");
+                int maksimalanBrojUcesnika = object1.getInt("maksimalanBrojUcesnika");
+
+                TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
+                terminTreningaDto.setIdSale((long) salaId);
+                terminTreningaDto.setId((long) id);
+                terminTreningaDto.setIdTreninga((long) tipTreningaId);
+                terminTreningaDto.setDatum(dateFormat.parse(datum));
+                terminTreningaDto.setVremePocetka(Time.valueOf(vremePocetka));
+                terminTreningaDto.setMaksimalanBrojUcesnika(maksimalanBrojUcesnika);
+                terminTreningaDto.setNazivTreninga(tipTreningaNaziv);
+                terminTreningaDto.setNazivSale(salaIme);
+
+                terminTreningaListDto.getContent().add(terminTreningaDto);
+            }
+            return terminTreningaListDto;
+        } catch (InterruptedException | IOException ex) {
+            ex.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public TerminTreningaListDto getTreninziZaKorisnika(){
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8081/api/termin-treninga/izlistaj-Termine-Korisnika"))
                 .header("Content-Type", "application/json")
@@ -73,6 +117,52 @@ public class UserServiceClient {
                 terminTreningaListDto.getContent().add(terminTreningaDto);
             }
                 return terminTreningaListDto;
+        } catch (InterruptedException | IOException ex) {
+            ex.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public TerminTreningaListDto getSviSlobodniTreninzi() {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/api/termin-treninga/izlistaj-slobodne-termine"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            JSONArray jsonArray = new JSONArray(response.body());
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            TerminTreningaListDto terminTreningaListDto = new TerminTreningaListDto();
+            for (int i = 0 ; i < jsonArray.length(); i++){
+                JSONObject object1 = jsonArray.getJSONObject(i);
+                int id = object1.getInt("id");
+                int salaId = object1.getJSONObject("sala").getInt("id");
+                String salaIme = object1.getJSONObject("sala").getString("ime");
+                int tipTreningaId = object1.getJSONObject("tipTreninga").getInt("id");
+                String tipTreningaNaziv = object1.getJSONObject("tipTreninga").getString("naziv");
+                String datum = object1.getString("datum").substring(0,10);
+                String vremePocetka = object1.getString("vremePocetka");
+                int maksimalanBrojUcesnika = object1.getInt("maksimalanBrojUcesnika");
+
+                TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
+                terminTreningaDto.setIdSale((long) salaId);
+                terminTreningaDto.setId((long) id);
+                terminTreningaDto.setIdTreninga((long) tipTreningaId);
+                terminTreningaDto.setDatum(dateFormat.parse(datum));
+                terminTreningaDto.setVremePocetka(Time.valueOf(vremePocetka));
+                terminTreningaDto.setMaksimalanBrojUcesnika(maksimalanBrojUcesnika);
+                terminTreningaDto.setNazivTreninga(tipTreningaNaziv);
+                terminTreningaDto.setNazivSale(salaIme);
+
+                terminTreningaListDto.getContent().add(terminTreningaDto);
+            }
+            return terminTreningaListDto;
         } catch (InterruptedException | IOException ex) {
             ex.printStackTrace();
         } catch (ParseException e) {
@@ -219,4 +309,6 @@ public class UserServiceClient {
 
         return Long.parseLong(response.body());
     }
+
+
 }

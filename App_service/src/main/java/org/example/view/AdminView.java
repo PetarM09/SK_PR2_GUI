@@ -52,8 +52,23 @@ public class AdminView extends JPanel {
         this.add(splitPane,BorderLayout.CENTER);
     }
 
-    public void initTerminListTable() throws IOException {
-        TerminTreningaListDto terminTreningaListDto = userServiceClient.getTreninzi();
+    public void initZauzetiTerminListTable() throws IOException {
+        TerminTreningaListDto terminTreningaListDto = userServiceClient.getSviZakazaniTreninzi();
+        terminiTableModel.removeRows();
+        terminiTableModel.getTerminTreningaListDto().getContent().clear();
+        terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
+            terminiTableModel.addRow(new Object[]{
+                    terminTreningaDto.getNazivSale(),
+                    terminTreningaDto.getNazivTreninga(),
+                    terminTreningaDto.getDatum(),
+                    terminTreningaDto.getVremePocetka(),
+                    terminTreningaDto.getMaksimalanBrojUcesnika()});
+        });
+        jTable.setModel(terminiTableModel);
+        MyApp.getInstance().refreshPanel();
+    }
+    public void initSlobodniTerminiListTable() {
+        TerminTreningaListDto terminTreningaListDto = userServiceClient.getSviSlobodniTreninzi();
         terminiTableModel.removeRows();
         terminiTableModel.getTerminTreningaListDto().getContent().clear();
         terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
@@ -161,6 +176,7 @@ public class AdminView extends JPanel {
     public void setUserServiceClient(UserServiceClient userServiceClient) {
         this.userServiceClient = userServiceClient;
     }
+
 
 
 }

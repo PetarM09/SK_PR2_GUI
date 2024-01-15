@@ -50,7 +50,7 @@ public class KlijentView extends JPanel {
 
         this.setVisible(true);
 
-        TerminTreningaListDto terminTreningaListDto = userServiceClient.getTreninzi();
+        TerminTreningaListDto terminTreningaListDto = userServiceClient.getTreninziZaKorisnika();
         terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
             System.out.println(terminTreningaDto.toString());
 
