@@ -1,5 +1,7 @@
 package org.example.view;
 
+import org.example.MyApp;
+import org.example.model.KorisniciModel;
 import org.example.model.TerminiTableModel;
 import org.example.restClient.UserServiceClient;
 import org.example.restClient.dto.KorisnikKlijentDTO;
@@ -7,6 +9,8 @@ import org.example.restClient.dto.TerminTreningaListDto;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.IOException;
 import java.util.List;
 
@@ -15,6 +19,7 @@ public class AdminView extends JPanel {
     private JPanel desktop;
     private JTable jTable;
     private TerminiTableModel terminiTableModel;
+    private KorisniciModel korisniciTableModel;
 
     private JSplitPane leftSplit;
 
@@ -22,6 +27,8 @@ public class AdminView extends JPanel {
 
     private UserServiceClient userServiceClient;
     public AdminView(){
+        this.terminiTableModel = new TerminiTableModel();
+        this.korisniciTableModel = new KorisniciModel();
         userServiceClient = new UserServiceClient();
 
         this.toolBar = new Toolbar();
@@ -33,9 +40,7 @@ public class AdminView extends JPanel {
         KorisnikKlijentDTO k = userServiceClient.getPodaci();
         this.adminToolPanel = new AdminToolPanel("Korisnik : " + k.getIme() + " " + k.getPrezime());
 
-
-        terminiTableModel = new TerminiTableModel();
-        jTable = new JTable(terminiTableModel);
+        jTable = new JTable();
         jTable.setFillsViewportHeight(true);
         jTable.setRowSelectionAllowed(true);
         jTable.setColumnSelectionAllowed(false);
@@ -43,16 +48,11 @@ public class AdminView extends JPanel {
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, adminToolPanel, new JScrollPane(jTable));
 
         this.add(splitPane,BorderLayout.CENTER);
-        setVisible(true);
     }
 
-    public void init() throws IOException {
-
-        this.setVisible(true);
-
+    public void initTerminListTable() throws IOException {
         TerminTreningaListDto terminTreningaListDto = userServiceClient.getTreninzi();
         terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
-            System.out.println(terminTreningaDto.toString());
 
             terminiTableModel.addRow(new Object[]{
                     terminTreningaDto.getNazivSale(),
@@ -62,8 +62,8 @@ public class AdminView extends JPanel {
                     terminTreningaDto.getMaksimalanBrojUcesnika()});
         });
         KorisnikKlijentDTO k = userServiceClient.getPodaci();
-        System.out.println(k.toString());
-        adminToolPanel.setPodaci(List.of(k.getIme(), k.getPrezime()));
+        setVisible(true);
+        MyApp.getInstance().refreshPanel();
     }
 
     public JToolBar getToolBar() {

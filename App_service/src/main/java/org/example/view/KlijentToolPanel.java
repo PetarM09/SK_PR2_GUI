@@ -27,11 +27,11 @@ public class KlijentToolPanel extends JPanel {
         actionPanel.setLayout(layout);
         JLabel label = new JLabel(podaci);
 
-        JButton create = new JButton("1");
+        JButton create = new JButton("Listanje dostupnih termina");
 
-        JButton delete = new JButton("2");
+        JButton delete = new JButton("Zakazi termin");
 
-        JButton read = new JButton("3");
+        JButton read = new JButton("Otkazi termin");
 
         JButton update = new JButton("4");
 

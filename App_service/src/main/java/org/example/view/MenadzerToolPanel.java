@@ -27,9 +27,9 @@ public class MenadzerToolPanel extends JPanel {
         actionPanel.setLayout(layout);
         JLabel label = new JLabel(podaci);
 
-        JButton create = new JButton("1");
+        JButton create = new JButton("Uredi podatke o fiskulturnoj sali");
 
-        JButton delete = new JButton("2");
+        JButton delete = new JButton("Definisi pogodnosti");
 
         JButton read = new JButton("3");
 

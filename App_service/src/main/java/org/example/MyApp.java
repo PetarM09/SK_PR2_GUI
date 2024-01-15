@@ -4,6 +4,8 @@ import org.example.view.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class MyApp extends JFrame {
     private static MyApp instance = null;
@@ -31,21 +33,36 @@ public class MyApp extends JFrame {
 
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                refreshPanel();
+            }
+        });
+    }
+
+    public void refreshPanel() {
+        this.revalidate();
+        this.repaint();
     }
 
     public void intView(String role){
         if(role.equals("ADMIN")){
             adminView = new AdminView();
-            adminView.setVisible(false);
-            this.add(adminView, BorderLayout.CENTER);
+            jPanel.remove(loginView);
+            jPanel.add(adminView);
+            jPanel.updateUI();
         }else if(role.equals("MENADZER")){
             menadzerView = new MenadzerView();
-            menadzerView.setVisible(false);
-            this.add(menadzerView, BorderLayout.CENTER);
+            jPanel.remove(loginView);
+            jPanel.add(menadzerView);
+            jPanel.updateUI();
         }else{
             klijentView = new KlijentView();
-            klijentView.setVisible(false);
-            this.add(klijentView, BorderLayout.CENTER);
+            jPanel.remove(loginView);
+            jPanel.add(klijentView);
+            jPanel.updateUI();
         }
     }
 

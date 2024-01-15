@@ -1,6 +1,9 @@
 package org.example.view;
 
+import org.example.MyApp;
+
 import javax.swing.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +12,12 @@ public class AdminToolPanel extends JPanel {
     private JPanel toolPanel;
     private JPanel actionPanel;
     private String podaci = "";
+    private JButton zabraniKorisnikuPristup;
+    private JButton odobriKorisnikuPristup;
+    private JButton izlistajKorisnike;
+    private JButton izlistajSlobodneTermine;
+    private JButton izlistajZakazaneTermine;
+
 
     public AdminToolPanel(String podaci){
         setBoxLayout();
@@ -27,22 +36,40 @@ public class AdminToolPanel extends JPanel {
         actionPanel.setLayout(layout);
         JLabel label = new JLabel(podaci);
 
-        JButton create = new JButton("1");
+        zabraniKorisnikuPristup = new JButton("Zabrani korisniku pristup");
 
-        JButton delete = new JButton("2");
-
-        JButton read = new JButton("3");
-
-        JButton update = new JButton("4");
+        odobriKorisnikuPristup = new JButton("Odobri korisniku pristup");
+        izlistajKorisnike = new JButton("Izlistaj korisnike");
+        izlistajSlobodneTermine = new JButton("Izlistaj slobodne termine");
+        izlistajZakazaneTermine = new JButton("Izlistaj zakazane termine");
 
         actionPanel.add(label);
-        actionPanel.add(create);
-        actionPanel.add(delete);
-        actionPanel.add(read);
-        actionPanel.add(update);
-
+        actionPanel.add(zabraniKorisnikuPristup);
+        actionPanel.add(odobriKorisnikuPristup);
+        actionPanel.add(izlistajKorisnike);
+        actionPanel.add(izlistajSlobodneTermine);
+        actionPanel.add(izlistajZakazaneTermine);
+        actions();
         return actionPanel;
     }
+
+    public void actions(){
+        this.izlistajKorisnike.addActionListener(e -> {
+
+        });
+
+        this.izlistajZakazaneTermine.addActionListener(e -> {
+            try {
+                System.out.println("Izlistaj zakazane termine");
+                MyApp.getInstance().getAdminView().initTerminListTable();
+                System.out.println("Izlistaj zakazane termine ispod");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+
+
 
     public void setPodaci(List<String> podaci){
 

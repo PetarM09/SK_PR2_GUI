@@ -71,13 +71,13 @@ public class LoginView extends JPanel {
                             .uri(URI.create(MyApp.apiUrl+ "api/korisnici/getUserRole"))
                             .header("Content-Type", "application/json")
                             .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
-                            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                            .GET()
                             .build();
 
                     response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
                     if(response.body().contains("ADMIN")) {
                         MyApp.getInstance().intView("ADMIN");
-                        MyApp.getInstance().getAdminView().init();
+                        MyApp.getInstance().refreshPanel();
                     }
                     else if(response.body().contains("MENADZER")) {
                         MyApp.getInstance().intView("MENADZER");
@@ -102,9 +102,7 @@ public class LoginView extends JPanel {
             MyApp.getInstance().getLoginView().setVisible(false);
             MyApp.getInstance().getjPanel().add(MyApp.getInstance().getRegisterView());
             MyApp.getInstance().getRegisterView().setVisible(true);
-            MyApp.getInstance().getjPanel().revalidate();
-
-
+            MyApp.getInstance().refreshPanel();
         });
     }
 
