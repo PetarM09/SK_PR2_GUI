@@ -1,5 +1,6 @@
 package org.example.restClient;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import okhttp3.*;
@@ -19,6 +20,9 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserServiceClient {
     public static final MediaType JSON
@@ -310,5 +314,96 @@ public class UserServiceClient {
         return Long.parseLong(response.body());
     }
 
+    public boolean registrujKorisnika(String username, String password, String email, String ime, String prezime, String dateOfBirth, String userType){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
+        if (userType.equalsIgnoreCase("klijent")){
+
+            Map<String, Object> requestData = new HashMap<>();
+            requestData.put("username", username);
+            requestData.put("password", password);
+            requestData.put("email", email);
+            requestData.put("datumRodjenja", dateOfBirth);
+            requestData.put("ime", ime);
+            requestData.put("prezime", prezime);
+            requestData.put("tipKorisnikaId", 3);
+            requestData.put("tipKorisnikaNaziv", "KLIJENT");
+
+            String jsonBody = mapToJson(requestData);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/api/korisnici/register-user"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                    .build();
+
+            HttpResponse<String> response = null;
+            try {
+                System.out.println("tu sam");
+                response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (response.statusCode() == 201){
+                return true;
+            }
+
+        }else{
+            NoviKorisnikDTO noviKorisnik = new NoviKorisnikDTO(
+                    username,
+                    password,
+                    email,
+                    dateOfBirth,
+                    ime,
+                    prezime,
+                    2,
+                    "MENADZER"
+            );
+            ObjectMapper objectMapper = new ObjectMapper();
+            String requestBody = "";
+            try {
+                requestBody = objectMapper.writeValueAsString(noviKorisnik);
+
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/api/korisnici/register-manager"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpResponse<String> response = null;
+            try {
+                response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (response.statusCode() == 201){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static String mapToJson(Map<String, Object> map) {
+        StringBuilder json = new StringBuilder("{");
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (json.length() > 1) {
+                json.append(",");
+            }
+            json.append("\"").append(entry.getKey()).append("\":");
+            if (entry.getValue() instanceof String) {
+                json.append("\"").append(entry.getValue()).append("\"");
+            } else {
+                json.append(entry.getValue());
+            }
+        }
+        json.append("}");
+        return json.toString();
+    }
 }
