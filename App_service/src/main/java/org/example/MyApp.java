@@ -47,18 +47,33 @@ public class MyApp extends JFrame {
         this.repaint();
     }
 
-    public void intView(String role){
-        if(role.equals("ADMIN")){
+    public void intView(String role) {
+        if (role.equals("ADMIN")) {
             adminView = new AdminView();
             jPanel.remove(loginView);
             jPanel.add(adminView);
             jPanel.updateUI();
-        }else if(role.equals("MENADZER")){
+        } else if (role.equals("MENADZER")) {
             menadzerView = new MenadzerView();
             jPanel.remove(loginView);
             jPanel.add(menadzerView);
             jPanel.updateUI();
-        }else{
+        } else if (role.equals("LOGOUT")) {
+            if(klijentView != null) {
+                jPanel.remove(klijentView);
+                klijentView = null;
+            } else if (adminView != null) {
+                jPanel.remove(adminView);
+                adminView = null;
+            } else if (menadzerView != null) {
+                jPanel.remove(menadzerView);
+                menadzerView = null;
+            }
+            jPanel.add(loginView);
+            jPanel.updateUI();
+            loginView.setVisible(true);
+            this.token = null;
+        } else {
             klijentView = new KlijentView();
             jPanel.remove(loginView);
             jPanel.add(klijentView);

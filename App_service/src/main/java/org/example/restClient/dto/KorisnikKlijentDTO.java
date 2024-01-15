@@ -15,6 +15,15 @@ public class KorisnikKlijentDTO {
 
     private String clanskaKarta;
     private Integer zakazaniTreninzi;
+    private String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getUsername() {
         return username;
@@ -71,6 +80,8 @@ public class KorisnikKlijentDTO {
     public void setZakazaniTreninzi(Integer zakazaniTreninzi) {
         this.zakazaniTreninzi = zakazaniTreninzi;
     }
+
+
 
     @Override
     public String toString() {

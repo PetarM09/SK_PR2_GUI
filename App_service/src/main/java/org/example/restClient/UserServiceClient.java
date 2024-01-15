@@ -1,6 +1,7 @@
 package org.example.restClient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.jsonwebtoken.Claims;
 import okhttp3.*;
 import org.example.MyApp;
@@ -195,7 +196,7 @@ public class UserServiceClient {
             korisnikKlijentDTO.setClanskaKarta(data.getString("clanskaKarta"));
             korisnikKlijentDTO.setZakazaniTreninzi(data.getInt("zakazaniTreninzi"));
             korisnikKlijentDTO.setDatumRodjenja(dateFormat.parse(data.getString("datumRodjenja")));
-
+            korisnikKlijentDTO.setPassword(data.getString("password"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
@@ -290,8 +291,35 @@ public class UserServiceClient {
         }
     }
 
-    private Long getKorisnikId(){
+    public void izmeniPodatke(KorisniciDto korisniciDto) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String requestBody = null;
+        try {
+            requestBody = objectMapper.writeValueAsString(korisniciDto);
+            System.out.println(requestBody);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/profil"))
+                .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.statusCode());
+            System.out.println(response.body());
+            if (response.statusCode() == 200){
+                JOptionPane.showMessageDialog(null, "Uspesno ste izmenili podatke korisniku");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public Long getKorisnikId(){
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/korisnici/getUserID"))
                 .header("Content-Type", "application/json")
@@ -309,6 +337,7 @@ public class UserServiceClient {
 
         return Long.parseLong(response.body());
     }
+
 
 
 }

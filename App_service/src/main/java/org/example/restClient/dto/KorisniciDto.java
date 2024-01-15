@@ -3,6 +3,7 @@ package org.example.restClient.dto;
 
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -30,6 +31,7 @@ public class KorisniciDto{
         this.zabranjenPristup = zabranjenPristup;
     }
 
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -46,9 +48,7 @@ public class KorisniciDto{
         this.email = email;
     }
 
-    public void setDatumRodjenja(LocalDate datumRodjenja) {
-        this.datumRodjenja = datumRodjenja;
-    }
+
 
     public void setIme(String ime) {
         this.ime = ime;
@@ -76,6 +76,10 @@ public class KorisniciDto{
 
     public LocalDate getDatumRodjenja() {
         return datumRodjenja;
+    }
+
+    public void setDatumRodjenja(LocalDate datumRodjenja) {
+        this.datumRodjenja = datumRodjenja;
     }
 
     public String getIme() {

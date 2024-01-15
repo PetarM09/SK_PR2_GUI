@@ -4,6 +4,7 @@ import org.example.MyApp;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,8 @@ public class AdminToolPanel extends JPanel {
     private JButton izlistajKorisnike;
     private JButton izlistajSlobodneTermine;
     private JButton izlistajZakazaneTermine;
+    private JButton izmeniPodatke;
+    private JButton logOut;
 
 
     public AdminToolPanel(String podaci){
@@ -42,6 +45,9 @@ public class AdminToolPanel extends JPanel {
         izlistajKorisnike = new JButton("Izlistaj korisnike");
         izlistajSlobodneTermine = new JButton("Izlistaj slobodne termine");
         izlistajZakazaneTermine = new JButton("Izlistaj zakazane termine");
+        izmeniPodatke = new JButton("Izmeni podatke");
+        logOut = new JButton("Log out");
+
 
         actionPanel.add(label);
         actionPanel.add(zabraniKorisnikuPristup);
@@ -49,6 +55,8 @@ public class AdminToolPanel extends JPanel {
         actionPanel.add(izlistajKorisnike);
         actionPanel.add(izlistajSlobodneTermine);
         actionPanel.add(izlistajZakazaneTermine);
+        actionPanel.add(izmeniPodatke);
+        actionPanel.add(logOut);
         actions();
         return actionPanel;
     }
@@ -72,6 +80,12 @@ public class AdminToolPanel extends JPanel {
         });
         this.izlistajSlobodneTermine.addActionListener(e -> {
             MyApp.getInstance().getAdminView().initSlobodniTerminiListTable();
+        });
+        this.logOut.addActionListener(e -> {
+            MyApp.getInstance().intView("LOGOUT");
+        });
+        this.izmeniPodatke.addActionListener(e -> {
+            MyApp.getInstance().getAdminView().izmenaPodataka();
         });
     }
 

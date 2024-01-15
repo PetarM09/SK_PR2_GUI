@@ -4,6 +4,7 @@ import org.example.MyApp;
 import org.example.model.KorisniciModel;
 import org.example.model.TerminiTableModel;
 import org.example.restClient.UserServiceClient;
+import org.example.restClient.dto.KorisniciDto;
 import org.example.restClient.dto.KorisniciListaDto;
 import org.example.restClient.dto.KorisnikKlijentDTO;
 import org.example.restClient.dto.TerminTreningaListDto;
@@ -13,6 +14,11 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.List;
 
 public class AdminView extends JPanel {
@@ -119,6 +125,58 @@ public class AdminView extends JPanel {
             }
         });
         KorisniciListTable();
+    }
+
+    public void izmenaPodataka(){
+        EditUserDataDialog editUserDataDialog = new EditUserDataDialog(this);
+    }
+    public void izmeniPodatke() throws ParseException {
+        Map<String, String> podaci = new HashMap<>(EditUserDataDialog.getPodaci());
+        KorisniciDto korisniciDto = new KorisniciDto();
+        KorisnikKlijentDTO k = userServiceClient.getPodaci();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date;
+        if(!Objects.equals(podaci.get("username"), ""))
+            korisniciDto.setUsername(podaci.get("username"));
+        else{
+            korisniciDto.setUsername(k.getUsername());
+        }
+
+        if(!Objects.equals(podaci.get("datumRodjenja"), "")) {
+            date = dateFormat.parse(podaci.get("datumRodjenja"));
+            korisniciDto.setDatumRodjenja(LocalDate.parse(dateFormat.format(date)));
+        }else{
+            date = k.getDatumRodjenja();
+            korisniciDto.setDatumRodjenja(LocalDate.parse(dateFormat.format(date)));
+        }
+
+        if(!Objects.equals(podaci.get("email"), ""))
+            korisniciDto.setEmail(podaci.get("email"));
+        else{
+            korisniciDto.setEmail(k.getEmail());
+        }
+
+        if(!Objects.equals(podaci.get("ime"), ""))
+            korisniciDto.setIme(podaci.get("ime"));
+        else{
+            korisniciDto.setIme(k.getIme());
+        }
+
+        if(!Objects.equals(podaci.get("password"), ""))
+            korisniciDto.setPassword(podaci.get("password"));
+        else{
+            korisniciDto.setPassword(k.getPassword());
+        }
+
+        if(!Objects.equals(podaci.get("prezime"), ""))
+            korisniciDto.setPrezime(podaci.get("prezime"));
+        else{
+            korisniciDto.setPrezime(k.getPrezime());
+        }
+        korisniciDto.setId(Math.toIntExact(userServiceClient.getKorisnikId()));
+
+
+        userServiceClient.izmeniPodatke(korisniciDto);
     }
 
     public JToolBar getToolBar() {
