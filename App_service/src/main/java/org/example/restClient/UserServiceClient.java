@@ -168,9 +168,13 @@ public class UserServiceClient {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/admin/zabrani-pristup/" + korisniciDto.getId()))
                 .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                .POST(HttpRequest.BodyPublishers.ofString(""))
                 .build();
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.statusCode());
+            System.out.println(response.body());
             if (response.statusCode() == 200){
                 JOptionPane.showMessageDialog(null, "Uspesno ste zabranili pristup korisniku");
             }
@@ -183,6 +187,8 @@ public class UserServiceClient {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/admin/odobri-pristup/" + korisniciDto.getId()))
                 .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                .POST(HttpRequest.BodyPublishers.ofString(""))
                 .build();
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
