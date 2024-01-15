@@ -1,6 +1,7 @@
 package org.example.view;
 
 import org.example.MyApp;
+import org.example.restClient.UserServiceClient;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,8 +14,10 @@ public class RegisterView extends JPanel {
     private JTextField lastNameField;
     private JTextField dateOfBirthField;
     private JComboBox<String> userTypeBox;
+    private UserServiceClient userServiceClient;
 
     public RegisterView() {
+        userServiceClient = new UserServiceClient();
         setLayout(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
@@ -118,6 +121,26 @@ public class RegisterView extends JPanel {
         constraints.anchor = GridBagConstraints.CENTER;
         JButton submitButton = new JButton("Submit");
         add(submitButton, constraints);
+        submitButton.addActionListener(e -> {
+            boolean created = userServiceClient.registrujKorisnika(
+                    usernameField.getText(),
+                    String.valueOf(passwordField.getPassword()),
+                    emailField.getText(),
+                    firstNameField.getText(),
+                    lastNameField.getText(),
+                    dateOfBirthField.getText(),
+                    userTypeBox.getSelectedItem().toString());
+
+            System.out.println(created);
+
+            if (created){
+                MyApp.getInstance().getjPanel().remove(MyApp.getInstance().getRegisterView());
+                MyApp.getInstance().getRegisterView().setVisible(false);
+                MyApp.getInstance().getjPanel().add(MyApp.getInstance().getLoginView());
+                MyApp.getInstance().getLoginView().setVisible(true);
+                MyApp.getInstance().getjPanel().revalidate();
+            }
+        });
 
         constraints.gridx = 0;
         constraints.gridy = 7;
