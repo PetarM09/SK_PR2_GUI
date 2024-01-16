@@ -1,5 +1,7 @@
 package org.example.view;
 
+import org.example.MyApp;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +11,12 @@ public class MenadzerToolPanel extends JPanel {
     private JPanel toolPanel;
     private JPanel actionPanel;
     private String podaci = "";
+    private JButton izmeniPodatke;
+    private JButton logOut;
+    private JButton promeniLozinku;
+    private JLabel label;
+    private JButton prikaziNotifikacije;
+
 
     public MenadzerToolPanel(String podaci){
         setBoxLayout();
@@ -25,23 +33,45 @@ public class MenadzerToolPanel extends JPanel {
     private JPanel actionPanel(String podaci){
         BoxLayout layout = new BoxLayout(actionPanel,BoxLayout.Y_AXIS);
         actionPanel.setLayout(layout);
-        JLabel label = new JLabel(podaci);
+        label = new JLabel(podaci);
 
-        JButton create = new JButton("Uredi podatke o fiskulturnoj sali");
+        promeniLozinku = new JButton("Promeni lozinku");
+        izmeniPodatke = new JButton("Izmeni podatke");
+        prikaziNotifikacije = new JButton("Prikazi notifikacije");
+        logOut = new JButton("Log out");
 
-        JButton delete = new JButton("Definisi pogodnosti");
-
-        JButton read = new JButton("3");
-
-        JButton update = new JButton("4");
 
         actionPanel.add(label);
-        actionPanel.add(create);
-        actionPanel.add(delete);
-        actionPanel.add(read);
-        actionPanel.add(update);
 
+        actionPanel.add(promeniLozinku);
+        actionPanel.add(prikaziNotifikacije);
+        actionPanel.add(izmeniPodatke);
+        actionPanel.add(logOut);
+        actions();
         return actionPanel;
+    }
+
+    public void actions(){
+        this.logOut.addActionListener(e -> {
+            MyApp.getInstance().intView("LOGOUT");
+        });
+        this.izmeniPodatke.addActionListener(e -> {
+            MyApp.getInstance().getMenadzerView().izmenaPodataka();
+        });
+        this.promeniLozinku.addActionListener(e -> {
+            MyApp.getInstance().getMenadzerView().promeniSifru();
+        });
+        this.prikaziNotifikacije.addActionListener(e -> {
+            MyApp.getInstance().getMenadzerView().initNotifikacijeListTable();
+        });
+    }
+
+    public JLabel getLabel() {
+        return label;
+    }
+
+    public void setLabel(JLabel label) {
+        this.label = label;
     }
 
     public void setPodaci(List<String> podaci){

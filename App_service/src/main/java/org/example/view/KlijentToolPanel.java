@@ -12,12 +12,11 @@ public class KlijentToolPanel extends JPanel {
     private JPanel toolPanel;
     private JPanel actionPanel;
     private String podaci = "";
-    private JButton izlistajSlobodneTermine;
-    private JButton izlistajZakazaneTermine;
     private JButton izmeniPodatke;
     private JButton logOut;
     private JButton promeniLozinku;
     private JLabel label;
+    private JButton prikaziNotifikacije;
 
 
     public KlijentToolPanel(String podaci){
@@ -37,17 +36,16 @@ public class KlijentToolPanel extends JPanel {
         actionPanel.setLayout(layout);
         label = new JLabel(podaci);
 
-        izlistajSlobodneTermine = new JButton("Izlistaj slobodne termine");
-        izlistajZakazaneTermine = new JButton("Izlistaj zakazane termine");
         promeniLozinku = new JButton("Promeni lozinku");
         izmeniPodatke = new JButton("Izmeni podatke");
+        prikaziNotifikacije = new JButton("Prikazi notifikacije");
         logOut = new JButton("Log out");
 
 
         actionPanel.add(label);
 
-        actionPanel.add(izlistajSlobodneTermine);
-        actionPanel.add(izlistajZakazaneTermine);
+        actionPanel.add(promeniLozinku);
+        actionPanel.add(prikaziNotifikacije);
         actionPanel.add(izmeniPodatke);
         actionPanel.add(logOut);
         actions();
@@ -55,17 +53,17 @@ public class KlijentToolPanel extends JPanel {
     }
 
     public void actions(){
-        this.izlistajSlobodneTermine.addActionListener(e -> {
-            MyApp.getInstance().getAdminView().initSlobodniTerminiListTable();
-        });
         this.logOut.addActionListener(e -> {
             MyApp.getInstance().intView("LOGOUT");
         });
         this.izmeniPodatke.addActionListener(e -> {
-            MyApp.getInstance().getAdminView().izmenaPodataka();
+            MyApp.getInstance().getKlijentView().izmenaPodataka();
         });
         this.promeniLozinku.addActionListener(e -> {
-            MyApp.getInstance().getAdminView().promeniSifru();
+            MyApp.getInstance().getKlijentView().promeniSifru();
+        });
+        this.prikaziNotifikacije.addActionListener(e -> {
+            MyApp.getInstance().getKlijentView().initNotifikacijeListTable();
         });
     }
 

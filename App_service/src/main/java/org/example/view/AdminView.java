@@ -2,12 +2,10 @@ package org.example.view;
 
 import org.example.MyApp;
 import org.example.model.KorisniciModel;
+import org.example.model.NotifikacijeModel;
 import org.example.model.TerminiTableModel;
 import org.example.restClient.UserServiceClient;
-import org.example.restClient.dto.KorisniciDto;
-import org.example.restClient.dto.KorisniciListaDto;
-import org.example.restClient.dto.KorisnikKlijentDTO;
-import org.example.restClient.dto.TerminTreningaListDto;
+import org.example.restClient.dto.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +25,7 @@ public class AdminView extends JPanel {
     private JTable jTable;
     private TerminiTableModel terminiTableModel;
     private KorisniciModel korisniciTableModel;
+    private NotifikacijeModel notifikacijeModel;
 
     private JSplitPane leftSplit;
 
@@ -36,6 +35,7 @@ public class AdminView extends JPanel {
     public AdminView(){
         this.terminiTableModel = new TerminiTableModel();
         this.korisniciTableModel = new KorisniciModel();
+        this.notifikacijeModel = new NotifikacijeModel();
         userServiceClient = new UserServiceClient();
 
         this.toolBar = new Toolbar();
@@ -57,6 +57,7 @@ public class AdminView extends JPanel {
 
         this.add(splitPane,BorderLayout.CENTER);
     }
+
 
     public void initZauzetiTerminListTable() throws IOException {
         TerminTreningaListDto terminTreningaListDto = userServiceClient.getSviZakazaniTreninzi();
@@ -86,6 +87,21 @@ public class AdminView extends JPanel {
                     terminTreningaDto.getMaksimalanBrojUcesnika()});
         });
         jTable.setModel(terminiTableModel);
+        MyApp.getInstance().refreshPanel();
+    }
+    public void initNotifikacijeListTable() {
+        NotifikacijeListaDto notifikacijeListaDto = userServiceClient.getNotifikacije();
+        notifikacijeModel.removeRows();
+        notifikacijeModel.getNotifikacijeListaDto().getContent().clear();
+        notifikacijeListaDto.getContent().forEach(notifikacijeDto -> {
+            notifikacijeModel.addRow(new Object[]{
+                    notifikacijeDto.getDatumSlanja(),
+                    notifikacijeDto.getEmail(),
+                    notifikacijeDto.getKorisnikId(),
+                    notifikacijeDto.getMessage(),
+                    notifikacijeDto.getTipNotifikacije()});
+        });
+        jTable.setModel(notifikacijeModel);
         MyApp.getInstance().refreshPanel();
     }
 
@@ -174,7 +190,7 @@ public class AdminView extends JPanel {
             date = k.getDatumRodjenja();
             korisniciDto.setDatumRodjenja(LocalDate.parse(dateFormat.format(date)));
         }
-
+        korisniciDto.setPassword(k.getPassword());
         if(!Objects.equals(podaci.get("email"), ""))
             korisniciDto.setEmail(podaci.get("email"));
         else{
@@ -195,7 +211,6 @@ public class AdminView extends JPanel {
 
         korisniciDto.setId(Math.toIntExact(userServiceClient.getKorisnikId()));
         adminToolPanel.getLabel().setText("Korisnik : " + korisniciDto.getIme() + " " + korisniciDto.getPrezime());
-        KorisniciListTable();
 
         userServiceClient.izmeniPodatke(korisniciDto);
     }
@@ -255,5 +270,6 @@ public class AdminView extends JPanel {
     public void setUserServiceClient(UserServiceClient userServiceClient) {
         this.userServiceClient = userServiceClient;
     }
+
 
 }

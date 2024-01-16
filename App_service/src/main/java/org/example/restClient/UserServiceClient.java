@@ -80,6 +80,86 @@ public class UserServiceClient {
         return null;
     }
 
+    public NotifikacijeListaDto getNotifikacije() {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8082/api/notifikacija/getAllNotifications"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            JSONArray jsonArray = new JSONArray(response.body());
+
+            NotifikacijeListaDto notifikacijeListaDto = new NotifikacijeListaDto();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object1 = jsonArray.getJSONObject(i);
+                int id = object1.getInt("id");
+                String email = object1.getString("email");
+                int korisnikId = object1.getInt("korisnikId");
+                String message = object1.getString("message");
+                String datum = object1.getString("datumSlanja").substring(0,10);
+                String tipNotifikacijeNaziv = object1.getJSONObject("tipNotifikacije").getString("type");
+
+
+
+                NotifikacijeDto notifikacijeDto = new NotifikacijeDto();
+                notifikacijeDto.setId((long) id);
+                notifikacijeDto.setEmail(email);
+                notifikacijeDto.setKorisnikId(korisnikId);
+                notifikacijeDto.setMessage(message);
+                notifikacijeDto.setDatumSlanja(LocalDate.parse(datum));
+                notifikacijeDto.setTipNotifikacije(tipNotifikacijeNaziv);
+
+                notifikacijeListaDto.getContent().add(notifikacijeDto);
+            }
+            return notifikacijeListaDto;
+        } catch (InterruptedException | IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public NotifikacijeListaDto getNotifikacijeById() {
+        Long id = getKorisnikId();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8082/api/notifikacija/getNotificationsForClientId/" + id))
+                .header("Content-Type", "application/json")
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            JSONArray jsonArray = new JSONArray(response.body());
+
+            NotifikacijeListaDto notifikacijeListaDto = new NotifikacijeListaDto();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object1 = jsonArray.getJSONObject(i);
+                int id1 = object1.getInt("id");
+                String email = object1.getString("email");
+                int korisnikId = object1.getInt("korisnikId");
+                String message = object1.getString("message");
+                String datum = object1.getString("datumSlanja").substring(0, 10);
+                String tipNotifikacijeNaziv = object1.getJSONObject("tipNotifikacije").getString("type");
+
+                NotifikacijeDto notifikacijeDto = new NotifikacijeDto();
+                notifikacijeDto.setId((long) id1);
+                notifikacijeDto.setEmail(email);
+                notifikacijeDto.setKorisnikId(korisnikId);
+                notifikacijeDto.setMessage(message);
+                notifikacijeDto.setDatumSlanja(LocalDate.parse(datum));
+                notifikacijeDto.setTipNotifikacije(tipNotifikacijeNaziv);
+
+                notifikacijeListaDto.getContent().add(notifikacijeDto);
+            }
+            return notifikacijeListaDto;
+        } catch (InterruptedException | IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
     public TerminTreningaListDto getTreninziZaKorisnika(){
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8081/api/termin-treninga/izlistaj-Termine-Korisnika"))

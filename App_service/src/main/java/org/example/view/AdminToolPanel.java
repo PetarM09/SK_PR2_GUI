@@ -20,6 +20,7 @@ public class AdminToolPanel extends JPanel {
     private JButton izlistajZakazaneTermine;
     private JButton izmeniPodatke;
     private JButton promeniLozinku;
+    private JButton prikaziNotifikacije;
     private JButton logOut;
     private JLabel label;
 
@@ -47,6 +48,7 @@ public class AdminToolPanel extends JPanel {
         izlistajKorisnike = new JButton("Izlistaj korisnike");
         izlistajSlobodneTermine = new JButton("Izlistaj slobodne termine");
         izlistajZakazaneTermine = new JButton("Izlistaj zakazane termine");
+        prikaziNotifikacije = new JButton("Prikazi notifikacije");
         izmeniPodatke = new JButton("Izmeni podatke");
         promeniLozinku = new JButton("Promeni lozinku");
         logOut = new JButton("Log out");
@@ -58,6 +60,7 @@ public class AdminToolPanel extends JPanel {
         actionPanel.add(izlistajKorisnike);
         actionPanel.add(izlistajSlobodneTermine);
         actionPanel.add(izlistajZakazaneTermine);
+        actionPanel.add(prikaziNotifikacije);
         actionPanel.add(izmeniPodatke);
         actionPanel.add(promeniLozinku);
         actionPanel.add(logOut);
@@ -75,6 +78,9 @@ public class AdminToolPanel extends JPanel {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+        });
+        this.prikaziNotifikacije.addActionListener(e -> {
+            MyApp.getInstance().getAdminView().initNotifikacijeListTable();
         });
         this.zabraniKorisnikuPristup.addActionListener(e -> {
             MyApp.getInstance().getAdminView().zabraniPristup();

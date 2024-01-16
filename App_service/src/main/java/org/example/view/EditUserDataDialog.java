@@ -67,17 +67,27 @@ public class EditUserDataDialog extends JDialog {
                 podaci.put("ime", ime);
                 podaci.put("prezime", prezime);
                 dispose();
-                if (MyApp.getInstance().getAdminView() != null) {
+                if (owner instanceof AdminView) {
                     try {
+                        System.out.println("ADMIN");
                         MyApp.getInstance().getAdminView().izmeniPodatke();
                     } catch (ParseException ex) {
                         throw new RuntimeException(ex);
                     }
-                } else if (MyApp.getInstance().getjPanel() instanceof KlijentToolPanel) {
-                    //MyApp.getInstance().getKlijentView().izmeniPodatke();
-                    System.out.println("BRAVO");
-                } else {
-                    System.out.println("Nije ni admin ni klijent");
+                } else if (owner instanceof KlijentView) {
+                    try {
+                        System.out.println("KLIJENT");
+                        MyApp.getInstance().getKlijentView().izmeniPodatke();
+                    } catch (ParseException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else if(owner instanceof MenadzerView){
+                    System.out.println("MENADZER");
+                    try {
+                        MyApp.getInstance().getMenadzerView().izmeniPodatke();
+                    } catch (ParseException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }
         });
@@ -104,13 +114,13 @@ public class EditUserDataDialog extends JDialog {
 
                 podaci.put("password", lozinka);
                 dispose();
-                if (MyApp.getInstance().getAdminView() != null) {
+                System.out.println(owner.getClass());
+                if (owner instanceof AdminView) {
                     MyApp.getInstance().getAdminView().izmeniSifru();
-                } else if (MyApp.getInstance().getjPanel() instanceof KlijentToolPanel) {
-                    //MyApp.getInstance().getKlijentView().izmeniPodatke();
-                    System.out.println("BRAVO");
-                } else {
-                    System.out.println("Nije ni admin ni klijent");
+                } else if (owner instanceof KlijentView) {
+                    MyApp.getInstance().getKlijentView().izmeniSifru();
+                } else if(owner instanceof MenadzerView){
+                    MyApp.getInstance().getMenadzerView().izmeniSifru();
                 }
             }
         });
