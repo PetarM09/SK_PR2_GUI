@@ -187,14 +187,13 @@ public class UserServiceClient {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
 
             JSONObject data = new JSONObject(response.body());
             korisnikKlijentDTO.setEmail(data.getString("email"));
             korisnikKlijentDTO.setIme(data.getString("ime"));
             korisnikKlijentDTO.setUsername(data.getString("username"));
             korisnikKlijentDTO.setPrezime(data.getString("prezime"));
-            korisnikKlijentDTO.setClanskaKarta(data.getString("clanskaKarta"));
-            korisnikKlijentDTO.setZakazaniTreninzi(data.getInt("zakazaniTreninzi"));
             korisnikKlijentDTO.setDatumRodjenja(dateFormat.parse(data.getString("datumRodjenja")));
             korisnikKlijentDTO.setPassword(data.getString("password"));
         } catch (IOException e) {

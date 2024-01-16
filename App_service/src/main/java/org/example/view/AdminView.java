@@ -162,12 +162,6 @@ public class AdminView extends JPanel {
             korisniciDto.setIme(k.getIme());
         }
 
-        if(!Objects.equals(podaci.get("password"), ""))
-            korisniciDto.setPassword(podaci.get("password"));
-        else{
-            korisniciDto.setPassword(k.getPassword());
-        }
-
         if(!Objects.equals(podaci.get("prezime"), ""))
             korisniciDto.setPrezime(podaci.get("prezime"));
         else{

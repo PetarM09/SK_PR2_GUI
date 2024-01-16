@@ -17,7 +17,6 @@ public class EditUserDataDialog extends JDialog {
     private JTextField birthdateField;
     private JTextField emailField;
     private JTextField nameField;
-    private JTextField passwordField;
     private JTextField surnameField;
 
     private static final Map<String, String> podaci = new HashMap<>();
@@ -30,7 +29,6 @@ public class EditUserDataDialog extends JDialog {
         birthdateField = new JTextField();
         emailField = new JTextField();
         nameField = new JTextField();
-        passwordField = new JTextField();
         surnameField = new JTextField();
 
         add(new JLabel("Username:"));
@@ -41,8 +39,6 @@ public class EditUserDataDialog extends JDialog {
         add(emailField);
         add(new JLabel("Ime:"));
         add(nameField);
-        add(new JLabel("Password:"));
-        add(passwordField);
         add(new JLabel("Prezime:"));
         add(surnameField);
 
@@ -54,7 +50,6 @@ public class EditUserDataDialog extends JDialog {
                 String datumRodjenja = birthdateField.getText();
                 String email = emailField.getText();
                 String ime = nameField.getText();
-                String password = passwordField.getText();
                 String prezime = surnameField.getText();
                 podaci.clear();
 
@@ -62,7 +57,6 @@ public class EditUserDataDialog extends JDialog {
                 podaci.put("datumRodjenja", datumRodjenja);
                 podaci.put("email", email);
                 podaci.put("ime", ime);
-                podaci.put("password", password);
                 podaci.put("prezime", prezime);
                 dispose();
                 if (MyApp.getInstance().getAdminView() != null) {
