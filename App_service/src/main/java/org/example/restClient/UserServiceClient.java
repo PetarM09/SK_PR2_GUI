@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import okhttp3.*;
 import org.example.MyApp;
 import org.example.restClient.dto.*;
+import org.example.view.TipNotifikacijeDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -118,6 +119,32 @@ public class UserServiceClient {
         } catch (InterruptedException | IOException ex) {
             ex.printStackTrace();
             return null;
+        }
+    }
+    public void dodajTipNotifikacije(TipNotifikacijeDto tipNotifikacijeDto) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String requestBody = null;
+
+        try {
+            requestBody = objectMapper.writeValueAsString(tipNotifikacijeDto);
+            System.out.println(requestBody);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8082/api/tip_notifikacije/insert"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 201){
+                JOptionPane.showMessageDialog(null, "Uspesno ste dodali tip notifikacije");
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -527,4 +554,6 @@ public class UserServiceClient {
         json.append("}");
         return json.toString();
     }
+
+
 }

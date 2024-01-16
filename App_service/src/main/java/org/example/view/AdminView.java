@@ -104,6 +104,16 @@ public class AdminView extends JPanel {
         jTable.setModel(notifikacijeModel);
         MyApp.getInstance().refreshPanel();
     }
+    public void tipNotifikacije() {
+        DodajTipNotifikacijeDialog dodajTipNotifikacijeDialog = new DodajTipNotifikacijeDialog(this);
+    }
+    public void dodajTipNotifikacije(){
+        Map<String, String> podaci = new HashMap<>(DodajTipNotifikacijeDialog.getPodaci());
+        TipNotifikacijeDto tipNotifikacijeDto = new TipNotifikacijeDto();
+        tipNotifikacijeDto.setType(podaci.get("tip"));
+        tipNotifikacijeDto.setMessage(podaci.get("poruka"));
+        userServiceClient.dodajTipNotifikacije(tipNotifikacijeDto);
+    }
 
     public void KorisniciListTable(){
         KorisniciListaDto korisniciListaDto = userServiceClient.getKorisnici();
@@ -270,6 +280,7 @@ public class AdminView extends JPanel {
     public void setUserServiceClient(UserServiceClient userServiceClient) {
         this.userServiceClient = userServiceClient;
     }
+
 
 
 }
