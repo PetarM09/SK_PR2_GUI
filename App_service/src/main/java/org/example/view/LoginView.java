@@ -99,10 +99,11 @@ public class LoginView extends JPanel {
 
         registerButton.addActionListener(e -> {
             MyApp.getInstance().getjPanel().remove(MyApp.getInstance().getLoginView());
-            MyApp.getInstance().getLoginView().setVisible(false);
             MyApp.getInstance().getjPanel().add(MyApp.getInstance().getRegisterView());
+            this.setVisible(false);
             MyApp.getInstance().getRegisterView().setVisible(true);
-            MyApp.getInstance().refreshPanel();
+            MyApp.getInstance().getjPanel().updateUI();
+
         });
     }
 
