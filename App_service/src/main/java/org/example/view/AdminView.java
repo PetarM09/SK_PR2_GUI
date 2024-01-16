@@ -173,6 +173,7 @@ public class AdminView extends JPanel {
         else{
             korisniciDto.setPrezime(k.getPrezime());
         }
+
         korisniciDto.setId(Math.toIntExact(userServiceClient.getKorisnikId()));
         adminToolPanel.getLabel().setText("Korisnik : " + korisniciDto.getIme() + " " + korisniciDto.getPrezime());
         KorisniciListTable();
