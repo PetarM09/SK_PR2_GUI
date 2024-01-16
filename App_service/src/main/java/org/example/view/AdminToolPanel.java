@@ -19,6 +19,7 @@ public class AdminToolPanel extends JPanel {
     private JButton izlistajSlobodneTermine;
     private JButton izlistajZakazaneTermine;
     private JButton izmeniPodatke;
+    private JButton promeniLozinku;
     private JButton logOut;
     private JLabel label;
 
@@ -47,6 +48,7 @@ public class AdminToolPanel extends JPanel {
         izlistajSlobodneTermine = new JButton("Izlistaj slobodne termine");
         izlistajZakazaneTermine = new JButton("Izlistaj zakazane termine");
         izmeniPodatke = new JButton("Izmeni podatke");
+        promeniLozinku = new JButton("Promeni lozinku");
         logOut = new JButton("Log out");
 
 
@@ -57,6 +59,7 @@ public class AdminToolPanel extends JPanel {
         actionPanel.add(izlistajSlobodneTermine);
         actionPanel.add(izlistajZakazaneTermine);
         actionPanel.add(izmeniPodatke);
+        actionPanel.add(promeniLozinku);
         actionPanel.add(logOut);
         actions();
         return actionPanel;
@@ -88,6 +91,10 @@ public class AdminToolPanel extends JPanel {
         this.izmeniPodatke.addActionListener(e -> {
             MyApp.getInstance().getAdminView().izmenaPodataka();
         });
+        this.promeniLozinku.addActionListener(e -> {
+            MyApp.getInstance().getAdminView().promeniSifru();
+        });
+
     }
 
     public JLabel getLabel() {

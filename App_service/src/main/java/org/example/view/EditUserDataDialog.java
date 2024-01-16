@@ -18,11 +18,19 @@ public class EditUserDataDialog extends JDialog {
     private JTextField emailField;
     private JTextField nameField;
     private JTextField surnameField;
+    private JPasswordField passwordField;
 
     private static final Map<String, String> podaci = new HashMap<>();
 
-    public EditUserDataDialog(JPanel owner) {
+    public EditUserDataDialog(JPanel owner, String sifra) {
         super();
+        if(sifra.equals("sifra")) {
+            sifra(owner);
+        }else{
+            sve(owner);
+        }
+    }
+    public void sve(JPanel owner){
         setLayout(new GridLayout(7, 2));
 
         usernameField = new JTextField();
@@ -76,6 +84,39 @@ public class EditUserDataDialog extends JDialog {
         add(confirmButton);
 
         setSize(300, 200);
+        setLocationRelativeTo(owner);
+        setVisible(true);
+    }
+
+    public void sifra(JPanel owner){
+        setLayout(new GridLayout(2, 2));
+        passwordField = new JPasswordField();
+
+        add(new JLabel("Lozinka:"));
+        add(passwordField);
+
+        JButton confirmButton = new JButton("Potvrdi");
+        confirmButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String lozinka = passwordField.getText();
+                podaci.clear();
+
+                podaci.put("password", lozinka);
+                dispose();
+                if (MyApp.getInstance().getAdminView() != null) {
+                    MyApp.getInstance().getAdminView().izmeniSifru();
+                } else if (MyApp.getInstance().getjPanel() instanceof KlijentToolPanel) {
+                    //MyApp.getInstance().getKlijentView().izmeniPodatke();
+                    System.out.println("BRAVO");
+                } else {
+                    System.out.println("Nije ni admin ni klijent");
+                }
+            }
+        });
+        add(confirmButton);
+
+        setSize(300, 80);
         setLocationRelativeTo(owner);
         setVisible(true);
     }

@@ -127,8 +127,33 @@ public class AdminView extends JPanel {
         KorisniciListTable();
     }
 
+    public void promeniSifru(){
+        EditUserDataDialog editUserDataDialog = new EditUserDataDialog(this,"sifra");
+    }
+
+    public void izmeniSifru(){
+        Map<String, String> podaci = new HashMap<>(EditUserDataDialog.getPodaci());
+        KorisniciDto korisniciDto = new KorisniciDto();
+        KorisnikKlijentDTO k = userServiceClient.getPodaci();
+        if(!Objects.equals(podaci.get("password"), ""))
+            korisniciDto.setPassword(podaci.get("password"));
+        else{
+            korisniciDto.setPassword(k.getPassword());
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date;
+        korisniciDto.setUsername(k.getUsername());
+        date = k.getDatumRodjenja();
+        korisniciDto.setDatumRodjenja(LocalDate.parse(dateFormat.format(date)));
+        korisniciDto.setEmail(k.getEmail());
+        korisniciDto.setIme(k.getIme());
+        korisniciDto.setPrezime(k.getPrezime());
+
+        korisniciDto.setId(Math.toIntExact(userServiceClient.getKorisnikId()));
+        userServiceClient.izmeniSifru(korisniciDto);
+    }
     public void izmenaPodataka(){
-        EditUserDataDialog editUserDataDialog = new EditUserDataDialog(this);
+        EditUserDataDialog editUserDataDialog = new EditUserDataDialog(this,"");
     }
     public void izmeniPodatke() throws ParseException {
         Map<String, String> podaci = new HashMap<>(EditUserDataDialog.getPodaci());
@@ -171,7 +196,6 @@ public class AdminView extends JPanel {
         korisniciDto.setId(Math.toIntExact(userServiceClient.getKorisnikId()));
         adminToolPanel.getLabel().setText("Korisnik : " + korisniciDto.getIme() + " " + korisniciDto.getPrezime());
         KorisniciListTable();
-
 
         userServiceClient.izmeniPodatke(korisniciDto);
     }
@@ -231,7 +255,5 @@ public class AdminView extends JPanel {
     public void setUserServiceClient(UserServiceClient userServiceClient) {
         this.userServiceClient = userServiceClient;
     }
-
-
 
 }

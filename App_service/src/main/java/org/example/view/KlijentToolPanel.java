@@ -1,6 +1,9 @@
 package org.example.view;
 
+import org.example.MyApp;
+
 import javax.swing.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +12,13 @@ public class KlijentToolPanel extends JPanel {
     private JPanel toolPanel;
     private JPanel actionPanel;
     private String podaci = "";
+    private JButton izlistajSlobodneTermine;
+    private JButton izlistajZakazaneTermine;
+    private JButton izmeniPodatke;
+    private JButton logOut;
+    private JButton promeniLozinku;
+    private JLabel label;
+
 
     public KlijentToolPanel(String podaci){
         setBoxLayout();
@@ -25,46 +35,49 @@ public class KlijentToolPanel extends JPanel {
     private JPanel actionPanel(String podaci){
         BoxLayout layout = new BoxLayout(actionPanel,BoxLayout.Y_AXIS);
         actionPanel.setLayout(layout);
-        JLabel label = new JLabel(podaci);
+        label = new JLabel(podaci);
 
-        JButton create = new JButton("Listanje dostupnih termina");
+        izlistajSlobodneTermine = new JButton("Izlistaj slobodne termine");
+        izlistajZakazaneTermine = new JButton("Izlistaj zakazane termine");
+        promeniLozinku = new JButton("Promeni lozinku");
+        izmeniPodatke = new JButton("Izmeni podatke");
+        logOut = new JButton("Log out");
 
-        JButton delete = new JButton("Zakazi termin");
-
-        JButton read = new JButton("Otkazi termin");
-
-        JButton update = new JButton("4");
 
         actionPanel.add(label);
-        actionPanel.add(create);
-        actionPanel.add(delete);
-        actionPanel.add(read);
-        actionPanel.add(update);
 
+        actionPanel.add(izlistajSlobodneTermine);
+        actionPanel.add(izlistajZakazaneTermine);
+        actionPanel.add(izmeniPodatke);
+        actionPanel.add(logOut);
+        actions();
         return actionPanel;
     }
 
-    public JPanel getToolPanel() {
-        return toolPanel;
+    public void actions(){
+        this.izlistajSlobodneTermine.addActionListener(e -> {
+            MyApp.getInstance().getAdminView().initSlobodniTerminiListTable();
+        });
+        this.logOut.addActionListener(e -> {
+            MyApp.getInstance().intView("LOGOUT");
+        });
+        this.izmeniPodatke.addActionListener(e -> {
+            MyApp.getInstance().getAdminView().izmenaPodataka();
+        });
+        this.promeniLozinku.addActionListener(e -> {
+            MyApp.getInstance().getAdminView().promeniSifru();
+        });
     }
 
-    public void setToolPanel(JPanel toolPanel) {
-        this.toolPanel = toolPanel;
+    public JLabel getLabel() {
+        return label;
     }
 
-    public JPanel getActionPanel() {
-        return actionPanel;
+    public void setLabel(JLabel label) {
+        this.label = label;
     }
 
-    public void setActionPanel(JPanel actionPanel) {
-        this.actionPanel = actionPanel;
-    }
+    public void setPodaci(List<String> podaci){
 
-    public String getPodaci() {
-        return podaci;
-    }
-
-    public void setPodaci(String podaci) {
-        this.podaci = podaci;
     }
 }

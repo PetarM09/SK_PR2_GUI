@@ -289,6 +289,37 @@ public class UserServiceClient {
             e.printStackTrace();
         }
     }
+    public void izmeniSifru(KorisniciDto korisniciDto){
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        String requestBody = null;
+
+        try {
+            requestBody = objectMapper.writeValueAsString(korisniciDto);
+            System.out.println(requestBody);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/profil/promeni-lozinku"))
+                .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200){
+                JOptionPane.showMessageDialog(null, "Uspesno ste izmenili sifru");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void izmeniPodatke(KorisniciDto korisniciDto) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -296,7 +327,6 @@ public class UserServiceClient {
         String requestBody = null;
         try {
             requestBody = objectMapper.writeValueAsString(korisniciDto);
-            System.out.println(requestBody);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
