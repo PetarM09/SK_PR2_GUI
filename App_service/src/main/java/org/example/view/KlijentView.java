@@ -61,8 +61,6 @@ public class KlijentView extends JPanel {
                     terminTreningaDto.getVremePocetka(),
                     terminTreningaDto.getMaksimalanBrojUcesnika()});
         });
-        KorisnikKlijentDTO k = userServiceClient.getPodaci();
-
     }
 
     public JToolBar getToolBar() {

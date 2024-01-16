@@ -135,10 +135,10 @@ public class RegisterView extends JPanel {
 
             if (created){
                 MyApp.getInstance().getjPanel().remove(MyApp.getInstance().getRegisterView());
-                MyApp.getInstance().getRegisterView().setVisible(false);
                 MyApp.getInstance().getjPanel().add(MyApp.getInstance().getLoginView());
+                this.setVisible(false);
                 MyApp.getInstance().getLoginView().setVisible(true);
-                MyApp.getInstance().getjPanel().revalidate();
+                MyApp.getInstance().getjPanel().updateUI();
             }
         });
 
