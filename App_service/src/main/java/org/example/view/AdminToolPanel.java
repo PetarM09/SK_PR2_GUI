@@ -20,6 +20,7 @@ public class AdminToolPanel extends JPanel {
     private JButton izlistajZakazaneTermine;
     private JButton izmeniPodatke;
     private JButton logOut;
+    private JLabel label;
 
 
     public AdminToolPanel(String podaci){
@@ -37,7 +38,7 @@ public class AdminToolPanel extends JPanel {
     private JPanel actionPanel(String podaci){
         BoxLayout layout = new BoxLayout(actionPanel,BoxLayout.Y_AXIS);
         actionPanel.setLayout(layout);
-        JLabel label = new JLabel(podaci);
+        label = new JLabel(podaci);
 
         zabraniKorisnikuPristup = new JButton("Zabrani korisniku pristup");
 
@@ -89,7 +90,13 @@ public class AdminToolPanel extends JPanel {
         });
     }
 
+    public JLabel getLabel() {
+        return label;
+    }
 
+    public void setLabel(JLabel label) {
+        this.label = label;
+    }
 
     public void setPodaci(List<String> podaci){
 
