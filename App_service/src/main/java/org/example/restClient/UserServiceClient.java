@@ -554,6 +554,4 @@ public class UserServiceClient {
         json.append("}");
         return json.toString();
     }
-
-
 }

@@ -14,6 +14,7 @@ public class MenadzerToolPanel extends JPanel {
     private JButton izmeniPodatke;
     private JButton logOut;
     private JButton promeniLozinku;
+    private JButton izmeniPodatkeOSali;
     private JLabel label;
     private JButton prikaziNotifikacije;
 
@@ -38,6 +39,7 @@ public class MenadzerToolPanel extends JPanel {
         promeniLozinku = new JButton("Promeni lozinku");
         izmeniPodatke = new JButton("Izmeni podatke");
         prikaziNotifikacije = new JButton("Prikazi notifikacije");
+        izmeniPodatkeOSali = new JButton("Izmeni podatke o sali");
         logOut = new JButton("Log out");
 
 
@@ -46,6 +48,7 @@ public class MenadzerToolPanel extends JPanel {
         actionPanel.add(promeniLozinku);
         actionPanel.add(prikaziNotifikacije);
         actionPanel.add(izmeniPodatke);
+        actionPanel.add(izmeniPodatkeOSali);
         actionPanel.add(logOut);
         actions();
         return actionPanel;
@@ -63,6 +66,9 @@ public class MenadzerToolPanel extends JPanel {
         });
         this.prikaziNotifikacije.addActionListener(e -> {
             MyApp.getInstance().getMenadzerView().initNotifikacijeListTable();
+        });
+        this.izmeniPodatkeOSali.addActionListener(e -> {
+            MyApp.getInstance().getMenadzerView().izmenaPodatakaOSali();
         });
     }
 

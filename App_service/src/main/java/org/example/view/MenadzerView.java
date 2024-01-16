@@ -3,11 +3,9 @@ package org.example.view;
 import org.example.MyApp;
 import org.example.model.NotifikacijeModel;
 import org.example.model.TerminiTableModel;
+import org.example.restClient.GymServiceClient;
 import org.example.restClient.UserServiceClient;
-import org.example.restClient.dto.KorisniciDto;
-import org.example.restClient.dto.KorisnikKlijentDTO;
-import org.example.restClient.dto.NotifikacijeListaDto;
-import org.example.restClient.dto.TerminTreningaListDto;
+import org.example.restClient.dto.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,8 +28,10 @@ public class MenadzerView extends JPanel {
     private MenadzerToolPanel menadzerToolPanel;
 
     private UserServiceClient userServiceClient;
+    private GymServiceClient gymServiceClient;
     public MenadzerView(){
         userServiceClient = new UserServiceClient();
+        gymServiceClient = new GymServiceClient();
 
         this.toolBar = new Toolbar();
         add(toolBar,BorderLayout.NORTH);
@@ -90,9 +90,42 @@ public class MenadzerView extends JPanel {
         MyApp.getInstance().refreshPanel();
     }
 
+    public void izmenaPodatakaOSali() {
+        IzmeniPodatkeOSaliDialog editUserDataDialog = new IzmeniPodatkeOSaliDialog(this);
+    }
+
+    public void izmeniPodatkeOSali(){
+        Map<String, String> podaci = new HashMap<>(IzmeniPodatkeOSaliDialog.getPodaci());
+        FiskulturnaSalaDTO fiskulturnaSalaDTO = new FiskulturnaSalaDTO();
+        FiskulturnaSalaDTO f = gymServiceClient.getPodaciFiskulturnaSala();
+        if(!Objects.equals(podaci.get("ime"), ""))
+            fiskulturnaSalaDTO.setIme(podaci.get("ime"));
+        else{
+            fiskulturnaSalaDTO.setIme(f.getIme());
+        }
+        if(!Objects.equals(podaci.get("kratak_opis"), ""))
+            fiskulturnaSalaDTO.setKratakOpis(podaci.get("kratak_opis"));
+        else{
+            fiskulturnaSalaDTO.setKratakOpis(f.getKratakOpis());
+        }
+        if(!Objects.equals(podaci.get("broj_personalnih_trenera"), ""))
+            fiskulturnaSalaDTO.setBroj_personalnih_trenera(Integer.parseInt(podaci.get("broj_personalnih_trenera")));
+        else{
+            fiskulturnaSalaDTO.setBroj_personalnih_trenera(f.getBroj_personalnih_trenera());
+        }
+        fiskulturnaSalaDTO.setId(f.getId());
+        System.out.println(fiskulturnaSalaDTO.getIme());
+        System.out.println(fiskulturnaSalaDTO.getKratakOpis());
+        System.out.println(fiskulturnaSalaDTO.getBroj_personalnih_trenera());
+        System.out.println(fiskulturnaSalaDTO.getId());
+
+        gymServiceClient.izmeniPodatkeOSali(fiskulturnaSalaDTO);
+    }
+
     public void izmenaPodataka(){
         EditUserDataDialog editUserDataDialog = new EditUserDataDialog(this,"");
     }
+
     public void izmeniPodatke() throws ParseException {
         Map<String, String> podaci = new HashMap<>(EditUserDataDialog.getPodaci());
         KorisniciDto korisniciDto = new KorisniciDto();
@@ -218,6 +251,7 @@ public class MenadzerView extends JPanel {
     public void setUserServiceClient(UserServiceClient userServiceClient) {
         this.userServiceClient = userServiceClient;
     }
+
 
 
 }
