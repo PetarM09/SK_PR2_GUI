@@ -43,7 +43,6 @@ public class UserServiceClient {
 
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
             JSONArray jsonArray = new JSONArray(response.body());
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -130,7 +129,6 @@ public class UserServiceClient {
 
         try {
             requestBody = objectMapper.writeValueAsString(tipNotifikacijeDto);
-            System.out.println(requestBody);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -189,7 +187,7 @@ public class UserServiceClient {
         }
     }
 
-    public TerminTreningaListDto getTreninziZaKorisnika(){
+    public ZakazaniTerminListaDto getTreninziZaKorisnika(){
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8081/api/termin-treninga/izlistaj-Termine-Korisnika"))
                 .header("Content-Type", "application/json")
@@ -198,24 +196,30 @@ public class UserServiceClient {
 
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
             JSONArray jsonArray = new JSONArray(response.body());
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-            TerminTreningaListDto terminTreningaListDto = new TerminTreningaListDto();
+            ZakazaniTerminListaDto zakazaniTerminListaDto = new ZakazaniTerminListaDto();
+
+
             for (int i = 0 ; i < jsonArray.length(); i++){
                 JSONObject object1 = jsonArray.getJSONObject(i);
+                System.out.println(object1);
                 int id = object1.getInt("id");
-                int salaId = object1.getJSONObject("sala").getInt("id");
-                String salaIme = object1.getJSONObject("sala").getString("ime");
-                int tipTreningaId = object1.getJSONObject("tipTreninga").getInt("id");
-                String tipTreningaNaziv = object1.getJSONObject("tipTreninga").getString("naziv");
-                String datum = object1.getString("datum").substring(0,10);
-                String vremePocetka = object1.getString("vremePocetka");
-                int maksimalanBrojUcesnika = object1.getInt("maksimalanBrojUcesnika");
-                int brojUcesnika = object1.getInt("brojUcesnika");
-
+                int klientId = getKorisnikId().intValue();
+                int cena = object1.getInt("cena");
                 TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
+                int salaId = object1.getJSONObject("terminTreninga").getJSONObject("sala").getInt("id");
+                String salaIme = object1.getJSONObject("terminTreninga").getJSONObject("sala").getString("ime");
+                int tipTreningaId = object1.getJSONObject("terminTreninga").getJSONObject("tipTreninga").getInt("id");
+                String tipTreningaNaziv = object1.getJSONObject("terminTreninga").getJSONObject("tipTreninga").getString("naziv");
+                String datum = object1.getJSONObject("terminTreninga").getString("datum").substring(0,10);
+                String vremePocetka = object1.getJSONObject("terminTreninga").getString("vremePocetka");
+                int maksimalanBrojUcesnika = object1.getJSONObject("terminTreninga").getInt("maksimalanBrojUcesnika");
+                int brojUcesnika = object1.getJSONObject("terminTreninga").getInt("brojUcesnika");
+
                 terminTreningaDto.setIdSale((long) salaId);
                 terminTreningaDto.setId((long) id);
                 terminTreningaDto.setIdTreninga((long) tipTreningaId);
@@ -226,9 +230,15 @@ public class UserServiceClient {
                 terminTreningaDto.setNazivSale(salaIme);
                 terminTreningaDto.setBrojUcesnika(brojUcesnika);
 
-                terminTreningaListDto.getContent().add(terminTreningaDto);
+                ZakazaniTerminDTO zakazaniTerminDTO = new ZakazaniTerminDTO();
+                zakazaniTerminDTO.setId((long) id);
+                zakazaniTerminDTO.setKlijentId(klientId);
+                zakazaniTerminDTO.setCena(cena);
+                zakazaniTerminDTO.setTerminTreningaDto(terminTreningaDto);
+
+                zakazaniTerminListaDto.getContent().add(zakazaniTerminDTO);
             }
-                return terminTreningaListDto;
+            return zakazaniTerminListaDto;
         } catch (InterruptedException | IOException ex) {
             ex.printStackTrace();
         } catch (ParseException e) {
@@ -252,7 +262,6 @@ public class UserServiceClient {
 
             TerminTreningaListDto terminTreningaListDto = new TerminTreningaListDto();
             for (int i = 0 ; i < jsonArray.length(); i++){
-                System.out.println(jsonArray.getJSONObject(i));
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 int id = object1.getInt("id");
                 int salaId = object1.getJSONObject("sala").getInt("id");
@@ -301,7 +310,6 @@ public class UserServiceClient {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
 
             JSONObject data = new JSONObject(response.body());
             korisnikKlijentDTO.setEmail(data.getString("email"));
@@ -377,8 +385,6 @@ public class UserServiceClient {
                 .build();
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.statusCode());
-            System.out.println(response.body());
             if (response.statusCode() == 200){
                 JOptionPane.showMessageDialog(null, "Uspesno ste zabranili pristup korisniku");
             }
@@ -411,7 +417,6 @@ public class UserServiceClient {
 
         try {
             requestBody = objectMapper.writeValueAsString(korisniciDto);
-            System.out.println(requestBody);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -452,8 +457,6 @@ public class UserServiceClient {
                 .build();
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.statusCode());
-            System.out.println(response.body());
             if (response.statusCode() == 200){
                 JOptionPane.showMessageDialog(null, "Uspesno ste izmenili podatke korisniku");
             }
@@ -504,7 +507,6 @@ public class UserServiceClient {
 
             HttpResponse<String> response = null;
             try {
-                System.out.println("tu sam");
                 response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -513,7 +515,6 @@ public class UserServiceClient {
                 return true;
             }
         }else if (userType.equalsIgnoreCase("menadzer")){
-            System.out.println("uso sam ovde");
             Map<String, Object> requestData = new HashMap<>();
             requestData.put("username", username);
             requestData.put("password", password);

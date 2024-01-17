@@ -78,4 +78,23 @@ public class GymServiceClient {
         } catch (IOException | InterruptedException e) {
         }
     }
+
+    public void otkaziTrening(TerminTreningaDto terminTreningaDto) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8081/api/termin-treninga/otkazi-termin/"))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                    .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(terminTreningaDto)))
+                    .build();
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.statusCode());
+            System.out.println(response.body());
+            if(response.statusCode() == 200){
+                JOptionPane.showMessageDialog(null, "Uspesno ste otkazali trening");
+            }
+        } catch (IOException | InterruptedException e) {
+        }
+    }
 }

@@ -81,11 +81,11 @@ public class LoginView extends JPanel {
                     }
                     else if(response.body().contains("MENADZER")) {
                         MyApp.getInstance().intView("MENADZER");
-                        MyApp.getInstance().getMenadzerView().init();
+                        MyApp.getInstance().refreshPanel();
                     }
                     else {
                         MyApp.getInstance().intView("KORISNIK");
-                        MyApp.getInstance().getKlijentView().init();
+                        MyApp.getInstance().refreshPanel();
                     }
                 } else if (response.statusCode() == 403) {
                     JOptionPane.showMessageDialog(this, "Zabranjen pristup", "Greška", JOptionPane.ERROR_MESSAGE);

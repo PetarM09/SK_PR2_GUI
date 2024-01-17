@@ -3,12 +3,10 @@ package org.example.view;
 import org.example.MyApp;
 import org.example.model.NotifikacijeModel;
 import org.example.model.TerminiTableModel;
+import org.example.model.ZakazaniTableModel;
 import org.example.restClient.GymServiceClient;
 import org.example.restClient.UserServiceClient;
-import org.example.restClient.dto.KorisniciDto;
-import org.example.restClient.dto.KorisnikKlijentDTO;
-import org.example.restClient.dto.NotifikacijeListaDto;
-import org.example.restClient.dto.TerminTreningaListDto;
+import org.example.restClient.dto.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +23,7 @@ public class KlijentView extends JPanel {
     private JTable jTable;
     private TerminiTableModel terminiTableModel;
     private NotifikacijeModel notifikacijeModel;
+    private ZakazaniTableModel zakazaniTableModel;
 
     private JSplitPane leftSplit;
 
@@ -35,6 +34,7 @@ public class KlijentView extends JPanel {
     public KlijentView(){
         userServiceClient = new UserServiceClient();
         gymServiceClient = new GymServiceClient();
+
 
         this.toolBar = new Toolbar();
         add(toolBar,BorderLayout.NORTH);
@@ -48,6 +48,7 @@ public class KlijentView extends JPanel {
 
         terminiTableModel = new TerminiTableModel();
         notifikacijeModel = new NotifikacijeModel();
+        zakazaniTableModel = new ZakazaniTableModel();
         jTable = new JTable();
         jTable.setFillsViewportHeight(true);
         jTable.setRowSelectionAllowed(true);
@@ -59,35 +60,20 @@ public class KlijentView extends JPanel {
         setVisible(true);
     }
 
-    public void init() throws IOException {
-
-        this.setVisible(true);
-
-        TerminTreningaListDto terminTreningaListDto = userServiceClient.getTreninziZaKorisnika();
-        terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
-            System.out.println(terminTreningaDto.toString());
-
-            terminiTableModel.addRow(new Object[]{
-                    terminTreningaDto.getNazivSale(),
-                    terminTreningaDto.getNazivTreninga(),
-                    terminTreningaDto.getDatum(),
-                    terminTreningaDto.getVremePocetka(),
-                    terminTreningaDto.getMaksimalanBrojUcesnika()});
-        });
-    }
     public void initZauzetiTerminiListTable() {
-        TerminTreningaListDto terminTreningaListDto = userServiceClient.getTreninziZaKorisnika();
-        terminiTableModel.removeRows();
-        terminiTableModel.getTerminTreningaListDto().getContent().clear();
-        terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
-            terminiTableModel.addRow(new Object[]{
-                    terminTreningaDto.getNazivSale(),
-                    terminTreningaDto.getNazivTreninga(),
-                    terminTreningaDto.getDatum(),
-                    terminTreningaDto.getVremePocetka(),
-                    terminTreningaDto.getMaksimalanBrojUcesnika()});
+        ZakazaniTerminListaDto zakazaniTerminListaDto = userServiceClient.getTreninziZaKorisnika();
+        zakazaniTableModel.removeRows();
+        zakazaniTableModel.getZakazaniTerminListaDto().getContent().clear();
+        zakazaniTerminListaDto.getContent().forEach(zakazaniTerminDTO -> {
+            zakazaniTableModel.addRow(new Object[]{
+                    zakazaniTerminDTO.getId(),
+                    zakazaniTerminDTO.getTerminTreningaDto().getNazivSale(),
+                    zakazaniTerminDTO.getCena(),
+                    zakazaniTerminDTO.getKlijentId(),
+                    zakazaniTerminDTO.getTerminTreningaDto().getDatum(),
+                    zakazaniTerminDTO.getTerminTreningaDto().getVremePocetka()});
         });
-        jTable.setModel(terminiTableModel);
+        jTable.setModel(zakazaniTableModel);
         MyApp.getInstance().refreshPanel();
     }
 
@@ -126,8 +112,6 @@ public class KlijentView extends JPanel {
 
     public void zakaziTrening() {
         terminiTableModel.getTerminTreningaListDto().getContent().forEach(terminTreningaDto -> {
-            System.out.println(terminTreningaDto.toString());
-            System.out.println(terminTreningaDto.getBrojUcesnika());
             if (terminTreningaDto.getNazivSale().equals(jTable.getValueAt(jTable.getSelectedRow(),0))
             && terminTreningaDto.getNazivTreninga().equals(jTable.getValueAt(jTable.getSelectedRow(),1))
             && terminTreningaDto.getDatum().equals(jTable.getValueAt(jTable.getSelectedRow(),2))
@@ -138,6 +122,14 @@ public class KlijentView extends JPanel {
     }
 
     public void otkaziTrening() {
+        terminiTableModel.getTerminTreningaListDto().getContent().forEach(terminTreningaDto -> {
+            if (terminTreningaDto.getNazivSale().equals(jTable.getValueAt(jTable.getSelectedRow(),0))
+                    && terminTreningaDto.getNazivTreninga().equals(jTable.getValueAt(jTable.getSelectedRow(),1))
+                    && terminTreningaDto.getDatum().equals(jTable.getValueAt(jTable.getSelectedRow(),2))
+                    && terminTreningaDto.getVremePocetka().equals(jTable.getValueAt(jTable.getSelectedRow(),3))){
+                gymServiceClient.otkaziTrening(terminTreningaDto);
+            }
+        });
     }
 
     public void izmenaPodataka(){

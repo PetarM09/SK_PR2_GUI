@@ -56,23 +56,6 @@ public class MenadzerView extends JPanel {
         setVisible(true);
     }
 
-    public void init() throws IOException {
-
-        this.setVisible(true);
-
-        TerminTreningaListDto terminTreningaListDto = userServiceClient.getTreninziZaKorisnika();
-        terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
-            System.out.println(terminTreningaDto.toString());
-
-            terminiTableModel.addRow(new Object[]{
-                    terminTreningaDto.getNazivSale(),
-                    terminTreningaDto.getNazivTreninga(),
-                    terminTreningaDto.getDatum(),
-                    terminTreningaDto.getVremePocetka(),
-                    terminTreningaDto.getMaksimalanBrojUcesnika()});
-        });
-        KorisnikKlijentDTO k = userServiceClient.getPodaci();
-    }
 
     public void initNotifikacijeListTable() {
         NotifikacijeListaDto notifikacijeListaDto = userServiceClient.getNotifikacijeById();
