@@ -15,6 +15,10 @@ public class KlijentToolPanel extends JPanel {
     private JButton izmeniPodatke;
     private JButton logOut;
     private JButton promeniLozinku;
+    private JButton priaziZauzeteTermine;
+    private JButton prikaziSlobodneTermine;
+    private JButton zakaziTrening;
+    private JButton otkaziTrening;
     private JLabel label;
     private JButton prikaziNotifikacije;
 
@@ -39,6 +43,10 @@ public class KlijentToolPanel extends JPanel {
         promeniLozinku = new JButton("Promeni lozinku");
         izmeniPodatke = new JButton("Izmeni podatke");
         prikaziNotifikacije = new JButton("Prikazi notifikacije");
+        priaziZauzeteTermine = new JButton("Prikazi zakazane termine");
+        prikaziSlobodneTermine = new JButton("Prikazi slobodne termine");
+        zakaziTrening = new JButton("Zakazi trening");
+        otkaziTrening = new JButton("Otkazi trening");
         logOut = new JButton("Log out");
 
 
@@ -47,6 +55,10 @@ public class KlijentToolPanel extends JPanel {
         actionPanel.add(promeniLozinku);
         actionPanel.add(prikaziNotifikacije);
         actionPanel.add(izmeniPodatke);
+        actionPanel.add(priaziZauzeteTermine);
+        actionPanel.add(prikaziSlobodneTermine);
+        actionPanel.add(zakaziTrening);
+        actionPanel.add(otkaziTrening);
         actionPanel.add(logOut);
         actions();
         return actionPanel;
@@ -65,6 +77,19 @@ public class KlijentToolPanel extends JPanel {
         this.prikaziNotifikacije.addActionListener(e -> {
             MyApp.getInstance().getKlijentView().initNotifikacijeListTable();
         });
+        this.priaziZauzeteTermine.addActionListener(e -> {
+            MyApp.getInstance().getKlijentView().initZauzetiTerminiListTable();
+        });
+        this.prikaziSlobodneTermine.addActionListener(e -> {
+            MyApp.getInstance().getKlijentView().initSlobodniTerminiListTable();
+        });
+        this.zakaziTrening.addActionListener(e -> {
+            MyApp.getInstance().getKlijentView().zakaziTrening();
+        });
+        this.otkaziTrening.addActionListener(e -> {
+            MyApp.getInstance().getKlijentView().otkaziTrening();
+        });
+
     }
 
     public JLabel getLabel() {

@@ -13,6 +13,16 @@ public class TerminTreningaDto {
     private String nazivSale;
     private String nazivTreninga;
 
+    private Integer brojUcesnika;
+
+    public Integer getBrojUcesnika() {
+        return brojUcesnika;
+    }
+
+    public void setBrojUcesnika(Integer brojUcesnika) {
+        this.brojUcesnika = brojUcesnika;
+    }
+
     public Long getId() {
         return id;
     }
@@ -72,6 +82,7 @@ public class TerminTreningaDto {
                 ", maksimalanBrojUcesnika=" + maksimalanBrojUcesnika +
                 ", nazivSale='" + nazivSale + '\'' +
                 ", nazivTreninga='" + nazivTreninga + '\'' +
+                ", brojUcesnika=" + brojUcesnika +
                 '}';
     }
 

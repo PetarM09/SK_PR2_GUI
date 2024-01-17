@@ -3,6 +3,7 @@ package org.example.view;
 import org.example.MyApp;
 import org.example.model.NotifikacijeModel;
 import org.example.model.TerminiTableModel;
+import org.example.restClient.GymServiceClient;
 import org.example.restClient.UserServiceClient;
 import org.example.restClient.dto.KorisniciDto;
 import org.example.restClient.dto.KorisnikKlijentDTO;
@@ -30,8 +31,10 @@ public class KlijentView extends JPanel {
     private KlijentToolPanel klijentToolPanel;
 
     private UserServiceClient userServiceClient;
+    private GymServiceClient gymServiceClient;
     public KlijentView(){
         userServiceClient = new UserServiceClient();
+        gymServiceClient = new GymServiceClient();
 
         this.toolBar = new Toolbar();
         add(toolBar,BorderLayout.NORTH);
@@ -45,7 +48,7 @@ public class KlijentView extends JPanel {
 
         terminiTableModel = new TerminiTableModel();
         notifikacijeModel = new NotifikacijeModel();
-        jTable = new JTable(terminiTableModel);
+        jTable = new JTable();
         jTable.setFillsViewportHeight(true);
         jTable.setRowSelectionAllowed(true);
         jTable.setColumnSelectionAllowed(false);
@@ -72,6 +75,38 @@ public class KlijentView extends JPanel {
                     terminTreningaDto.getMaksimalanBrojUcesnika()});
         });
     }
+    public void initZauzetiTerminiListTable() {
+        TerminTreningaListDto terminTreningaListDto = userServiceClient.getTreninziZaKorisnika();
+        terminiTableModel.removeRows();
+        terminiTableModel.getTerminTreningaListDto().getContent().clear();
+        terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
+            terminiTableModel.addRow(new Object[]{
+                    terminTreningaDto.getNazivSale(),
+                    terminTreningaDto.getNazivTreninga(),
+                    terminTreningaDto.getDatum(),
+                    terminTreningaDto.getVremePocetka(),
+                    terminTreningaDto.getMaksimalanBrojUcesnika()});
+        });
+        jTable.setModel(terminiTableModel);
+        MyApp.getInstance().refreshPanel();
+    }
+
+    public void initSlobodniTerminiListTable() {
+        TerminTreningaListDto terminTreningaListDto = userServiceClient.getSviSlobodniTreninzi();
+        terminiTableModel.removeRows();
+        terminiTableModel.getTerminTreningaListDto().getContent().clear();
+        terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
+            terminiTableModel.addRow(new Object[]{
+                    terminTreningaDto.getNazivSale(),
+                    terminTreningaDto.getNazivTreninga(),
+                    terminTreningaDto.getDatum(),
+                    terminTreningaDto.getVremePocetka(),
+                    terminTreningaDto.getMaksimalanBrojUcesnika()});
+            terminiTableModel.getTerminTreningaListDto().getContent().add(terminTreningaDto);
+        });
+        jTable.setModel(terminiTableModel);
+        MyApp.getInstance().refreshPanel();
+    }
 
     public void initNotifikacijeListTable() {
         NotifikacijeListaDto notifikacijeListaDto = userServiceClient.getNotifikacijeById();
@@ -87,6 +122,22 @@ public class KlijentView extends JPanel {
         });
         jTable.setModel(notifikacijeModel);
         MyApp.getInstance().refreshPanel();
+    }
+
+    public void zakaziTrening() {
+        terminiTableModel.getTerminTreningaListDto().getContent().forEach(terminTreningaDto -> {
+            System.out.println(terminTreningaDto.toString());
+            System.out.println(terminTreningaDto.getBrojUcesnika());
+            if (terminTreningaDto.getNazivSale().equals(jTable.getValueAt(jTable.getSelectedRow(),0))
+            && terminTreningaDto.getNazivTreninga().equals(jTable.getValueAt(jTable.getSelectedRow(),1))
+            && terminTreningaDto.getDatum().equals(jTable.getValueAt(jTable.getSelectedRow(),2))
+            && terminTreningaDto.getVremePocetka().equals(jTable.getValueAt(jTable.getSelectedRow(),3))){
+                gymServiceClient.zakaziTrening(terminTreningaDto);
+            }
+        });
+    }
+
+    public void otkaziTrening() {
     }
 
     public void izmenaPodataka(){
@@ -217,6 +268,4 @@ public class KlijentView extends JPanel {
     public void setUserServiceClient(UserServiceClient userServiceClient) {
         this.userServiceClient = userServiceClient;
     }
-
-
 }

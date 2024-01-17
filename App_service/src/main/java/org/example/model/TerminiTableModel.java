@@ -32,7 +32,6 @@ public class TerminiTableModel extends DefaultTableModel {
         dto.setDatum((Date) row[2]);
         dto.setVremePocetka((Time) row[3]);
         dto.setMaksimalanBrojUcesnika(Integer.parseInt(String.valueOf(row[4])));
-        terminTreningaListDto.getContent().add(dto);
     }
 
     public TerminTreningaListDto getTerminTreningaListDto() {

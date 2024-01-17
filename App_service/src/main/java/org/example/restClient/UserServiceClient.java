@@ -59,6 +59,7 @@ public class UserServiceClient {
                 String datum = object1.getString("datum").substring(0,10);
                 String vremePocetka = object1.getString("vremePocetka");
                 int maksimalanBrojUcesnika = object1.getInt("maksimalanBrojUcesnika");
+                int brojUcesnika = object1.getInt("brojUcesnika");
 
                 TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
                 terminTreningaDto.setIdSale((long) salaId);
@@ -69,6 +70,7 @@ public class UserServiceClient {
                 terminTreningaDto.setMaksimalanBrojUcesnika(maksimalanBrojUcesnika);
                 terminTreningaDto.setNazivTreninga(tipTreningaNaziv);
                 terminTreningaDto.setNazivSale(salaIme);
+                terminTreningaDto.setBrojUcesnika(brojUcesnika);
 
                 terminTreningaListDto.getContent().add(terminTreningaDto);
             }
@@ -211,6 +213,7 @@ public class UserServiceClient {
                 String datum = object1.getString("datum").substring(0,10);
                 String vremePocetka = object1.getString("vremePocetka");
                 int maksimalanBrojUcesnika = object1.getInt("maksimalanBrojUcesnika");
+                int brojUcesnika = object1.getInt("brojUcesnika");
 
                 TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
                 terminTreningaDto.setIdSale((long) salaId);
@@ -221,6 +224,7 @@ public class UserServiceClient {
                 terminTreningaDto.setMaksimalanBrojUcesnika(maksimalanBrojUcesnika);
                 terminTreningaDto.setNazivTreninga(tipTreningaNaziv);
                 terminTreningaDto.setNazivSale(salaIme);
+                terminTreningaDto.setBrojUcesnika(brojUcesnika);
 
                 terminTreningaListDto.getContent().add(terminTreningaDto);
             }
@@ -248,6 +252,7 @@ public class UserServiceClient {
 
             TerminTreningaListDto terminTreningaListDto = new TerminTreningaListDto();
             for (int i = 0 ; i < jsonArray.length(); i++){
+                System.out.println(jsonArray.getJSONObject(i));
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 int id = object1.getInt("id");
                 int salaId = object1.getJSONObject("sala").getInt("id");
@@ -257,16 +262,18 @@ public class UserServiceClient {
                 String datum = object1.getString("datum").substring(0,10);
                 String vremePocetka = object1.getString("vremePocetka");
                 int maksimalanBrojUcesnika = object1.getInt("maksimalanBrojUcesnika");
+                int brojUcesnika = object1.getInt("brojUcesnika");
 
                 TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
-                terminTreningaDto.setIdSale((long) salaId);
-                terminTreningaDto.setId((long) id);
-                terminTreningaDto.setIdTreninga((long) tipTreningaId);
+                terminTreningaDto.setIdSale(Long.valueOf(salaId));
+                terminTreningaDto.setId(Long.valueOf(id));
+                terminTreningaDto.setIdTreninga(Long.valueOf(tipTreningaId));
                 terminTreningaDto.setDatum(dateFormat.parse(datum));
                 terminTreningaDto.setVremePocetka(Time.valueOf(vremePocetka));
                 terminTreningaDto.setMaksimalanBrojUcesnika(maksimalanBrojUcesnika);
                 terminTreningaDto.setNazivTreninga(tipTreningaNaziv);
                 terminTreningaDto.setNazivSale(salaIme);
+                terminTreningaDto.setBrojUcesnika(brojUcesnika);
 
                 terminTreningaListDto.getContent().add(terminTreningaDto);
             }

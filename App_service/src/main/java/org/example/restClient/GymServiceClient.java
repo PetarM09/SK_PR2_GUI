@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.example.MyApp;
 import org.example.restClient.dto.FiskulturnaSalaDTO;
+import org.example.restClient.dto.TerminTreningaDto;
 import org.example.restClient.dto.TerminTreningaListDto;
 
 import javax.swing.*;
@@ -54,6 +55,25 @@ public class GymServiceClient {
             System.out.println(response.body());
             if(response.statusCode() == 200){
                 JOptionPane.showMessageDialog(null, "Uspesno ste izmenili podatke o sali");
+            }
+        } catch (IOException | InterruptedException e) {
+        }
+    }
+
+    public void zakaziTrening(TerminTreningaDto terminTreningaDto) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8081/api/termin-treninga/zakazi-termin/"))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                    .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(terminTreningaDto)))
+                    .build();
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.statusCode());
+            System.out.println(response.body());
+            if(response.statusCode() == 200){
+                JOptionPane.showMessageDialog(null, "Uspesno ste zakazali trening");
             }
         } catch (IOException | InterruptedException e) {
         }
