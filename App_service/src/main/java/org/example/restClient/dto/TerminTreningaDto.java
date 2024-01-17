@@ -12,6 +12,15 @@ public class TerminTreningaDto {
     private Integer maksimalanBrojUcesnika;
     private String nazivSale;
     private String nazivTreninga;
+    private Integer cena;
+
+    public Integer getCena() {
+        return cena;
+    }
+
+    public void setCena(Integer cena) {
+        this.cena = cena;
+    }
 
     private Integer brojUcesnika;
 

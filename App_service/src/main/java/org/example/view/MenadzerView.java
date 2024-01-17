@@ -10,9 +10,11 @@ import org.example.restClient.dto.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -228,7 +230,53 @@ public class MenadzerView extends JPanel {
         MyApp.getInstance().refreshPanel();
     }
 
+    public void dodajNoviTermin() {
+        Map<String, String> podaci = new HashMap<>(DodajTerminDijalog.getPodaci());
+        TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date;
+        if(!Objects.equals(podaci.get("idSale"), ""))
+            terminTreningaDto.setIdSale(Long.valueOf(podaci.get("idSale")));
+        else{
+            terminTreningaDto.setIdSale(1L);
+        }
+        if(!Objects.equals(podaci.get("nazivTreninga"), ""))
+            terminTreningaDto.setIdTreninga(Long.valueOf(podaci.get("nazivTreninga")));
+        else{
+            terminTreningaDto.setIdTreninga(1L);
+        }
+        if(!Objects.equals(podaci.get("datum"), "")){
+            try {
+                date = dateFormat.parse(podaci.get("datum"));
+                terminTreningaDto.setDatum(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            terminTreningaDto.setDatum(new Date(String.valueOf(LocalDate.now())));
+        }
+        if(!Objects.equals(podaci.get("vremePocetka"), "")) {
+            System.out.println(podaci.get("vremePocetka"));
+            terminTreningaDto.setVremePocetka(Time.valueOf(podaci.get("vremePocetka")));
+        }else{
+            terminTreningaDto.setVremePocetka(Time.valueOf(LocalTime.now()));
+        }
+        if(!Objects.equals(podaci.get("maksimalanBrojUcesnika"), ""))
+            terminTreningaDto.setMaksimalanBrojUcesnika(Integer.parseInt(podaci.get("maksimalanBrojUcesnika")));
+        else{
+            terminTreningaDto.setMaksimalanBrojUcesnika(10);
+        }
+        if(!Objects.equals(podaci.get("cena"), ""))
+            terminTreningaDto.setCena(Integer.parseInt(podaci.get("cena")));
+        else{
+            terminTreningaDto.setCena(1000);
+        }
+        gymServiceClient.dodajNoviTermin(terminTreningaDto);
+    }
+
     public void dodajTermin() {
+        DodajTerminDijalog dodajTerminDialog = new DodajTerminDijalog(this);
     }
 
     public JToolBar getToolBar() {

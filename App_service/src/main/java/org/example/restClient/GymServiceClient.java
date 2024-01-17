@@ -234,6 +234,7 @@ public class GymServiceClient {
         return null;
     }
 
+
     private Long getIdKorisnika(){
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/korisnici/getUserID"))
@@ -263,6 +264,23 @@ public class GymServiceClient {
             System.out.println(response.body());
             if(response.statusCode() == 200){
                 JOptionPane.showMessageDialog(null, "Uspesno ste obrisali trening");
+            }
+        } catch (IOException | InterruptedException e) {
+        }
+    }
+
+    public void dodajNoviTermin(TerminTreningaDto terminTreningaDto) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8081/api/termin-treninga/dodaj-termin"))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                    .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(terminTreningaDto)))
+                    .build();
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode() == 200){
+                JOptionPane.showMessageDialog(null, "Uspesno ste dodali novi trening");
             }
         } catch (IOException | InterruptedException e) {
         }
