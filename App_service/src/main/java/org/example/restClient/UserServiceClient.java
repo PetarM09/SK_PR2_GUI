@@ -196,7 +196,6 @@ public class UserServiceClient {
 
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
             JSONArray jsonArray = new JSONArray(response.body());
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -209,6 +208,7 @@ public class UserServiceClient {
                 System.out.println(object1);
                 int id = object1.getInt("id");
                 int klientId = getKorisnikId().intValue();
+                int terminTreningaId = object1.getJSONObject("terminTreninga").getInt("id");
                 int cena = object1.getInt("cena");
                 TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
                 int salaId = object1.getJSONObject("terminTreninga").getJSONObject("sala").getInt("id");
@@ -221,7 +221,7 @@ public class UserServiceClient {
                 int brojUcesnika = object1.getJSONObject("terminTreninga").getInt("brojUcesnika");
 
                 terminTreningaDto.setIdSale((long) salaId);
-                terminTreningaDto.setId((long) id);
+                terminTreningaDto.setId((long) terminTreningaId);
                 terminTreningaDto.setIdTreninga((long) tipTreningaId);
                 terminTreningaDto.setDatum(dateFormat.parse(datum));
                 terminTreningaDto.setVremePocetka(Time.valueOf(vremePocetka));
@@ -235,6 +235,8 @@ public class UserServiceClient {
                 zakazaniTerminDTO.setKlijentId(klientId);
                 zakazaniTerminDTO.setCena(cena);
                 zakazaniTerminDTO.setTerminTreningaDto(terminTreningaDto);
+
+                System.out.println(zakazaniTerminDTO);
 
                 zakazaniTerminListaDto.getContent().add(zakazaniTerminDTO);
             }

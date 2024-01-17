@@ -72,6 +72,7 @@ public class KlijentView extends JPanel {
                     zakazaniTerminDTO.getKlijentId(),
                     zakazaniTerminDTO.getTerminTreningaDto().getDatum(),
                     zakazaniTerminDTO.getTerminTreningaDto().getVremePocetka()});
+            zakazaniTableModel.getZakazaniTerminListaDto().getContent().add(zakazaniTerminDTO);
         });
         jTable.setModel(zakazaniTableModel);
         MyApp.getInstance().refreshPanel();
@@ -122,12 +123,9 @@ public class KlijentView extends JPanel {
     }
 
     public void otkaziTrening() {
-        terminiTableModel.getTerminTreningaListDto().getContent().forEach(terminTreningaDto -> {
-            if (terminTreningaDto.getNazivSale().equals(jTable.getValueAt(jTable.getSelectedRow(),0))
-                    && terminTreningaDto.getNazivTreninga().equals(jTable.getValueAt(jTable.getSelectedRow(),1))
-                    && terminTreningaDto.getDatum().equals(jTable.getValueAt(jTable.getSelectedRow(),2))
-                    && terminTreningaDto.getVremePocetka().equals(jTable.getValueAt(jTable.getSelectedRow(),3))){
-                gymServiceClient.otkaziTrening(terminTreningaDto);
+        zakazaniTableModel.getZakazaniTerminListaDto().getContent().forEach(zakazaniTerminDTO -> {
+            if(zakazaniTerminDTO.getId().equals(jTable.getValueAt(jTable.getSelectedRow(),0))){
+                gymServiceClient.otkaziTrening(zakazaniTerminDTO);
             }
         });
     }

@@ -8,6 +8,7 @@ import org.example.MyApp;
 import org.example.restClient.dto.FiskulturnaSalaDTO;
 import org.example.restClient.dto.TerminTreningaDto;
 import org.example.restClient.dto.TerminTreningaListDto;
+import org.example.restClient.dto.ZakazaniTerminDTO;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -79,14 +80,16 @@ public class GymServiceClient {
         }
     }
 
-    public void otkaziTrening(TerminTreningaDto terminTreningaDto) {
+    public void otkaziTrening(ZakazaniTerminDTO zakazaniTerminDTO) {
         try {
+            System.out.println("zakazaniTerminDTO");
             ObjectMapper objectMapper = new ObjectMapper();
+            System.out.println(objectMapper.writeValueAsString(zakazaniTerminDTO));
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/api/termin-treninga/otkazi-termin/"))
+                    .uri(URI.create("http://localhost:8081/api/termin-treninga/otkaziTermin"))
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
-                    .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(terminTreningaDto)))
+                    .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(zakazaniTerminDTO)))
                     .build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             System.out.println(response.statusCode());

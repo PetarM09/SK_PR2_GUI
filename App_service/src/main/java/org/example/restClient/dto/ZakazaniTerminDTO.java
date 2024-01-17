@@ -40,4 +40,13 @@ public class ZakazaniTerminDTO {
     }
 
 
+    @Override
+    public String toString() {
+        return "ZakazaniTerminDTO{" +
+                "id=" + id +
+                ", terminTreningaDto=" + terminTreningaDto +
+                ", klijentId=" + klijentId +
+                ", cena=" + cena +
+                '}';
+    }
 }

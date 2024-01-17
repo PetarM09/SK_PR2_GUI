@@ -37,8 +37,6 @@ public class ZakazaniTableModel extends DefaultTableModel {
         terminTreningaDto.setDatum((Date) row[4]);
         terminTreningaDto.setVremePocetka((Time) row[5]);
         dto.setTerminTreningaDto(terminTreningaDto);
-
-        zakazaniTerminListaDto.getContent().add(dto);
     }
 
     public ZakazaniTerminListaDto getZakazaniTerminListaDto() {
