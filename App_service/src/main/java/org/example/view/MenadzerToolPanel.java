@@ -19,6 +19,8 @@ public class MenadzerToolPanel extends JPanel {
     private JButton prikaziSlobodneTermine;
     private JLabel label;
     private JButton prikaziNotifikacije;
+    private JButton otkaziTrening;
+    private JButton dodajTermin;
 
 
     public MenadzerToolPanel(String podaci){
@@ -41,6 +43,10 @@ public class MenadzerToolPanel extends JPanel {
         promeniLozinku = new JButton("Promeni lozinku");
         izmeniPodatke = new JButton("Izmeni podatke");
         prikaziNotifikacije = new JButton("Prikazi notifikacije");
+        prikaziZauzeteTermine = new JButton("Prikazi zakazane termine");
+        prikaziSlobodneTermine = new JButton("Prikazi slobodne termine");
+        otkaziTrening = new JButton("Otkazi trening");
+        dodajTermin = new JButton("Dodaj termin");
         izmeniPodatkeOSali = new JButton("Izmeni podatke o sali");
         logOut = new JButton("Log out");
 
@@ -51,6 +57,10 @@ public class MenadzerToolPanel extends JPanel {
         actionPanel.add(prikaziNotifikacije);
         actionPanel.add(izmeniPodatke);
         actionPanel.add(izmeniPodatkeOSali);
+        actionPanel.add(prikaziZauzeteTermine);
+        actionPanel.add(prikaziSlobodneTermine);
+        actionPanel.add(dodajTermin);
+        actionPanel.add(otkaziTrening);
         actionPanel.add(logOut);
         actions();
         return actionPanel;
@@ -71,6 +81,18 @@ public class MenadzerToolPanel extends JPanel {
         });
         this.izmeniPodatkeOSali.addActionListener(e -> {
             MyApp.getInstance().getMenadzerView().izmenaPodatakaOSali();
+        });
+        this.otkaziTrening.addActionListener(e -> {
+            MyApp.getInstance().getMenadzerView().otkaziTrening();
+        });
+        this.dodajTermin.addActionListener(e -> {
+            MyApp.getInstance().getMenadzerView().dodajTermin();
+        });
+        this.prikaziZauzeteTermine.addActionListener(e -> {
+            MyApp.getInstance().getMenadzerView().initZauzetiTerminiTable();
+        });
+        this.prikaziSlobodneTermine.addActionListener(e -> {
+            MyApp.getInstance().getMenadzerView().initSlobodniTerminiTable();
         });
     }
 

@@ -181,6 +181,56 @@ public class MenadzerView extends JPanel {
         userServiceClient.izmeniSifru(korisniciDto);
     }
 
+    public void otkaziTrening() {
+        AtomicReference<ZakazaniTerminDTO> zakazaniTerminDTO1= new AtomicReference<>(new ZakazaniTerminDTO());
+        zakazaniTableModel.getZakazaniTerminListaDto().getContent().forEach(zakazaniTerminDTO -> {
+            if (zakazaniTerminDTO.getId().equals(jTable.getValueAt(jTable.getSelectedRow(),0))){
+                zakazaniTerminDTO1.set(zakazaniTerminDTO);
+            }
+        });
+        gymServiceClient.obrisiZakazaniTermin(zakazaniTerminDTO1.get().getTerminTreningaDto().getId());
+        initZauzetiTerminiTable();
+    }
+
+    public void initZauzetiTerminiTable() {
+        ZakazaniTerminListaDto zakazaniTerminListaDto = gymServiceClient.getZauzetiZaSalu();
+        zakazaniTableModel.removeRows();
+        zakazaniTableModel.getZakazaniTerminListaDto().getContent().clear();
+        zakazaniTerminListaDto.getContent().forEach(zakazaniTerminDTO -> {
+            zakazaniTableModel.addRow(new Object[]{
+                    zakazaniTerminDTO.getId(),
+                    zakazaniTerminDTO.getTerminTreningaDto().getNazivSale(),
+                    zakazaniTerminDTO.getCena(),
+                    zakazaniTerminDTO.getKlijentId(),
+                    zakazaniTerminDTO.getTerminTreningaDto().getDatum(),
+                    zakazaniTerminDTO.getTerminTreningaDto().getVremePocetka()});
+            zakazaniTableModel.getZakazaniTerminListaDto().getContent().add(zakazaniTerminDTO);
+        });
+        jTable.setModel(zakazaniTableModel);
+        MyApp.getInstance().refreshPanel();
+
+    }
+
+    public void initSlobodniTerminiTable() {
+        TerminTreningaListDto terminTreningaListDto = gymServiceClient.getSlobodniZaSalu();
+        terminiTableModel.removeRows();
+        terminiTableModel.getTerminTreningaListDto().getContent().clear();
+        terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
+            terminiTableModel.addRow(new Object[]{
+                    terminTreningaDto.getNazivSale(),
+                    terminTreningaDto.getNazivTreninga(),
+                    terminTreningaDto.getDatum(),
+                    terminTreningaDto.getVremePocetka(),
+                    terminTreningaDto.getMaksimalanBrojUcesnika()});
+            terminiTableModel.getTerminTreningaListDto().getContent().add(terminTreningaDto);
+        });
+        jTable.setModel(terminiTableModel);
+        MyApp.getInstance().refreshPanel();
+    }
+
+    public void dodajTermin() {
+    }
+
     public JToolBar getToolBar() {
         return toolBar;
     }
@@ -236,7 +286,4 @@ public class MenadzerView extends JPanel {
     public void setUserServiceClient(UserServiceClient userServiceClient) {
         this.userServiceClient = userServiceClient;
     }
-
-
-
 }

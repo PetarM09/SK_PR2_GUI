@@ -21,6 +21,9 @@ public class KlijentToolPanel extends JPanel {
     private JButton otkaziTrening;
     private JLabel label;
     private JButton prikaziNotifikacije;
+    private JButton filtrirajPoTipu;
+    private JButton filtrirajPoNazivu;
+    private JButton filtrirajPoDanu;
 
 
     public KlijentToolPanel(String podaci){
@@ -40,6 +43,9 @@ public class KlijentToolPanel extends JPanel {
         actionPanel.setLayout(layout);
         label = new JLabel(podaci);
 
+        filtrirajPoDanu = new JButton("Filtriraj po danu");
+        filtrirajPoNazivu = new JButton("Filtriraj po nazivu treninga");
+        filtrirajPoTipu = new JButton("Filtriraj po tipu");
         promeniLozinku = new JButton("Promeni lozinku");
         izmeniPodatke = new JButton("Izmeni podatke");
         prikaziNotifikacije = new JButton("Prikazi notifikacije");
@@ -57,6 +63,9 @@ public class KlijentToolPanel extends JPanel {
         actionPanel.add(izmeniPodatke);
         actionPanel.add(priaziZauzeteTermine);
         actionPanel.add(prikaziSlobodneTermine);
+        actionPanel.add(filtrirajPoNazivu);
+        actionPanel.add(filtrirajPoDanu);
+        actionPanel.add(filtrirajPoTipu);
         actionPanel.add(zakaziTrening);
         actionPanel.add(otkaziTrening);
         actionPanel.add(logOut);
@@ -89,6 +98,16 @@ public class KlijentToolPanel extends JPanel {
         this.otkaziTrening.addActionListener(e -> {
             MyApp.getInstance().getKlijentView().otkaziTrening();
         });
+        this.filtrirajPoNazivu.addActionListener(e -> {
+            MyApp.getInstance().getKlijentView().filtrirajPoNazivu();
+        });
+        this.filtrirajPoDanu.addActionListener(e -> {
+            MyApp.getInstance().getKlijentView().filtrirajPoDanu();
+        });
+        this.filtrirajPoTipu.addActionListener(e -> {
+            MyApp.getInstance().getKlijentView().filtrirajPoTipu();
+        });
+
 
     }
 

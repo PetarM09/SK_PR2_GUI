@@ -203,6 +203,64 @@ public class KlijentView extends JPanel {
         userServiceClient.izmeniSifru(korisniciDto);
     }
 
+
+    public void filtrirajPoNazivu() {
+        String naziv = JOptionPane.showInputDialog("Unesi naziv");
+        ZakazaniTerminListaDto zakazaniTerminListaDto = userServiceClient.filtrirajPoNazivu(naziv);
+        zakazaniTableModel.removeRows();
+        zakazaniTableModel.getZakazaniTerminListaDto().getContent().clear();
+        zakazaniTerminListaDto.getContent().forEach(zakazaniTerminDTO -> {
+                zakazaniTableModel.addRow(new Object[]{
+                        zakazaniTerminDTO.getId(),
+                        zakazaniTerminDTO.getTerminTreningaDto().getNazivSale(),
+                        zakazaniTerminDTO.getCena(),
+                        zakazaniTerminDTO.getKlijentId(),
+                        zakazaniTerminDTO.getTerminTreningaDto().getDatum(),
+                        zakazaniTerminDTO.getTerminTreningaDto().getVremePocetka()});
+                zakazaniTableModel.getZakazaniTerminListaDto().getContent().add(zakazaniTerminDTO);
+        });
+        jTable.setModel(zakazaniTableModel);
+        MyApp.getInstance().refreshPanel();
+    }
+
+    public void filtrirajPoDanu() {
+        String dan = JOptionPane.showInputDialog("Unesi dan");
+        ZakazaniTerminListaDto zakazaniTerminListaDto = userServiceClient.filtrirajPoDanu(dan);
+        zakazaniTableModel.removeRows();
+        zakazaniTableModel.getZakazaniTerminListaDto().getContent().clear();
+        zakazaniTerminListaDto.getContent().forEach(zakazaniTerminDTO -> {
+                zakazaniTableModel.addRow(new Object[]{
+                        zakazaniTerminDTO.getId(),
+                        zakazaniTerminDTO.getTerminTreningaDto().getNazivSale(),
+                        zakazaniTerminDTO.getCena(),
+                        zakazaniTerminDTO.getKlijentId(),
+                        zakazaniTerminDTO.getTerminTreningaDto().getDatum(),
+                        zakazaniTerminDTO.getTerminTreningaDto().getVremePocetka()});
+                zakazaniTableModel.getZakazaniTerminListaDto().getContent().add(zakazaniTerminDTO);
+        });
+        jTable.setModel(zakazaniTableModel);
+        MyApp.getInstance().refreshPanel();
+    }
+
+    public void filtrirajPoTipu() {
+        String tip = JOptionPane.showInputDialog("Unesi tip");
+        ZakazaniTerminListaDto zakazaniTerminListaDto = userServiceClient.filtrirajPoTipu(tip);
+        zakazaniTableModel.removeRows();
+        zakazaniTableModel.getZakazaniTerminListaDto().getContent().clear();
+        zakazaniTerminListaDto.getContent().forEach(zakazaniTerminDTO -> {
+                zakazaniTableModel.addRow(new Object[]{
+                        zakazaniTerminDTO.getId(),
+                        zakazaniTerminDTO.getTerminTreningaDto().getNazivSale(),
+                        zakazaniTerminDTO.getCena(),
+                        zakazaniTerminDTO.getKlijentId(),
+                        zakazaniTerminDTO.getTerminTreningaDto().getDatum(),
+                        zakazaniTerminDTO.getTerminTreningaDto().getVremePocetka()});
+                zakazaniTableModel.getZakazaniTerminListaDto().getContent().add(zakazaniTerminDTO);
+        });
+        jTable.setModel(zakazaniTableModel);
+        MyApp.getInstance().refreshPanel();
+    }
+
     public JToolBar getToolBar() {
         return toolBar;
     }
@@ -258,4 +316,5 @@ public class KlijentView extends JPanel {
     public void setUserServiceClient(UserServiceClient userServiceClient) {
         this.userServiceClient = userServiceClient;
     }
+
 }
