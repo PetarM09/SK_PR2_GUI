@@ -3,6 +3,7 @@ package org.example.view;
 import org.example.MyApp;
 import org.example.model.NotifikacijeModel;
 import org.example.model.TerminiTableModel;
+import org.example.model.ZakazaniTableModel;
 import org.example.restClient.GymServiceClient;
 import org.example.restClient.UserServiceClient;
 import org.example.restClient.dto.*;
@@ -22,6 +23,7 @@ public class MenadzerView extends JPanel {
     private JTable jTable;
     private TerminiTableModel terminiTableModel;
     private NotifikacijeModel notifikacijeModel;
+    private ZakazaniTableModel zakazaniTableModel;
 
     private JSplitPane leftSplit;
 
@@ -44,6 +46,7 @@ public class MenadzerView extends JPanel {
 
         terminiTableModel = new TerminiTableModel();
         notifikacijeModel = new NotifikacijeModel();
+        zakazaniTableModel = new ZakazaniTableModel();
 
         jTable = new JTable(terminiTableModel);
         jTable.setFillsViewportHeight(true);

@@ -15,6 +15,8 @@ public class MenadzerToolPanel extends JPanel {
     private JButton logOut;
     private JButton promeniLozinku;
     private JButton izmeniPodatkeOSali;
+    private JButton prikaziZauzeteTermine;
+    private JButton prikaziSlobodneTermine;
     private JLabel label;
     private JButton prikaziNotifikacije;
 

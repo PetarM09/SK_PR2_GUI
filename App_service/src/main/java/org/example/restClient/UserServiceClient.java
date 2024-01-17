@@ -19,7 +19,11 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserServiceClient {
@@ -64,7 +68,14 @@ public class UserServiceClient {
                 terminTreningaDto.setIdSale((long) salaId);
                 terminTreningaDto.setId((long) id);
                 terminTreningaDto.setIdTreninga((long) tipTreningaId);
-                terminTreningaDto.setDatum(dateFormat.parse(datum));
+
+                Date date = dateFormat.parse(datum);
+                LocalDate localDate = LocalDate.parse(dateFormat.format(date));
+                localDate = localDate.plusDays(1);
+                date = dateFormat.parse(localDate.toString());
+
+                terminTreningaDto.setDatum(date);
+
                 terminTreningaDto.setVremePocetka(Time.valueOf(vremePocetka));
                 terminTreningaDto.setMaksimalanBrojUcesnika(maksimalanBrojUcesnika);
                 terminTreningaDto.setNazivTreninga(tipTreningaNaziv);
@@ -197,12 +208,8 @@ public class UserServiceClient {
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             JSONArray jsonArray = new JSONArray(response.body());
-
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
             ZakazaniTerminListaDto zakazaniTerminListaDto = new ZakazaniTerminListaDto();
-
-
             for (int i = 0 ; i < jsonArray.length(); i++){
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 System.out.println(object1);
@@ -223,7 +230,13 @@ public class UserServiceClient {
                 terminTreningaDto.setIdSale((long) salaId);
                 terminTreningaDto.setId((long) terminTreningaId);
                 terminTreningaDto.setIdTreninga((long) tipTreningaId);
-                terminTreningaDto.setDatum(dateFormat.parse(datum));
+
+                Date date = dateFormat.parse(datum);
+                LocalDate localDate = LocalDate.parse(dateFormat.format(date));
+                localDate = localDate.plusDays(1);
+                date = dateFormat.parse(localDate.toString());
+
+                terminTreningaDto.setDatum(date);
                 terminTreningaDto.setVremePocetka(Time.valueOf(vremePocetka));
                 terminTreningaDto.setMaksimalanBrojUcesnika(maksimalanBrojUcesnika);
                 terminTreningaDto.setNazivTreninga(tipTreningaNaziv);
@@ -236,11 +249,8 @@ public class UserServiceClient {
                 zakazaniTerminDTO.setCena(cena);
                 zakazaniTerminDTO.setTerminTreningaDto(terminTreningaDto);
 
-                System.out.println(zakazaniTerminDTO);
-
                 zakazaniTerminListaDto.getContent().add(zakazaniTerminDTO);
-            }
-            return zakazaniTerminListaDto;
+            }return zakazaniTerminListaDto;
         } catch (InterruptedException | IOException ex) {
             ex.printStackTrace();
         } catch (ParseException e) {
@@ -279,7 +289,14 @@ public class UserServiceClient {
                 terminTreningaDto.setIdSale(Long.valueOf(salaId));
                 terminTreningaDto.setId(Long.valueOf(id));
                 terminTreningaDto.setIdTreninga(Long.valueOf(tipTreningaId));
-                terminTreningaDto.setDatum(dateFormat.parse(datum));
+
+                Date date = dateFormat.parse(datum);
+                LocalDate localDate = LocalDate.parse(dateFormat.format(date));
+                localDate = localDate.plusDays(1);
+                date = dateFormat.parse(localDate.toString());
+
+                terminTreningaDto.setDatum(date);
+
                 terminTreningaDto.setVremePocetka(Time.valueOf(vremePocetka));
                 terminTreningaDto.setMaksimalanBrojUcesnika(maksimalanBrojUcesnika);
                 terminTreningaDto.setNazivTreninga(tipTreningaNaziv);
@@ -546,6 +563,203 @@ public class UserServiceClient {
             }
         }
         return false;
+    }
+
+    public ZakazaniTerminListaDto filtrirajPoDanu(String dan){
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/api/termin-treninga/filtirajPoDanu"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                .POST(HttpRequest.BodyPublishers.ofString(dan))
+                .build();
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
+            JSONArray jsonArray = new JSONArray(response.body());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            ZakazaniTerminListaDto zakazaniTerminListaDto = new ZakazaniTerminListaDto();
+            for (int i = 0 ; i < jsonArray.length(); i++){
+                JSONObject object1 = jsonArray.getJSONObject(i);
+                System.out.println(object1);
+                int id = object1.getInt("id");
+                int klientId = getKorisnikId().intValue();
+                int terminTreningaId = object1.getJSONObject("terminTreninga").getInt("id");
+                int cena = object1.getInt("cena");
+                TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
+                int salaId = object1.getJSONObject("terminTreninga").getJSONObject("sala").getInt("id");
+                String salaIme = object1.getJSONObject("terminTreninga").getJSONObject("sala").getString("ime");
+                int tipTreningaId = object1.getJSONObject("terminTreninga").getJSONObject("tipTreninga").getInt("id");
+                String tipTreningaNaziv = object1.getJSONObject("terminTreninga").getJSONObject("tipTreninga").getString("naziv");
+                String datum = object1.getJSONObject("terminTreninga").getString("datum").substring(0,10);
+                String vremePocetka = object1.getJSONObject("terminTreninga").getString("vremePocetka");
+                int maksimalanBrojUcesnika = object1.getJSONObject("terminTreninga").getInt("maksimalanBrojUcesnika");
+                int brojUcesnika = object1.getJSONObject("terminTreninga").getInt("brojUcesnika");
+
+                terminTreningaDto.setIdSale((long) salaId);
+                terminTreningaDto.setId((long) terminTreningaId);
+                terminTreningaDto.setIdTreninga((long) tipTreningaId);
+
+                Date date = dateFormat.parse(datum);
+                LocalDate localDate = LocalDate.parse(dateFormat.format(date));
+                localDate = localDate.plusDays(1);
+                date = dateFormat.parse(localDate.toString());
+
+                terminTreningaDto.setDatum(date);
+                terminTreningaDto.setVremePocetka(Time.valueOf(vremePocetka));
+                terminTreningaDto.setMaksimalanBrojUcesnika(maksimalanBrojUcesnika);
+                terminTreningaDto.setNazivTreninga(tipTreningaNaziv);
+                terminTreningaDto.setNazivSale(salaIme);
+                terminTreningaDto.setBrojUcesnika(brojUcesnika);
+
+                ZakazaniTerminDTO zakazaniTerminDTO = new ZakazaniTerminDTO();
+                zakazaniTerminDTO.setId((long) id);
+                zakazaniTerminDTO.setKlijentId(klientId);
+                zakazaniTerminDTO.setCena(cena);
+                zakazaniTerminDTO.setTerminTreningaDto(terminTreningaDto);
+
+                zakazaniTerminListaDto.getContent().add(zakazaniTerminDTO);
+            }return zakazaniTerminListaDto;
+        } catch (InterruptedException | IOException ex) {
+            ex.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
+    public ZakazaniTerminListaDto filtrirajPoTipu(String tip){
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/api/termin-treninga/filtirajPoIndividualni-Grupni"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                .POST(HttpRequest.BodyPublishers.ofString(tip))
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            JSONArray jsonArray = new JSONArray(response.body());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            ZakazaniTerminListaDto zakazaniTerminListaDto = new ZakazaniTerminListaDto();
+            for (int i = 0 ; i < jsonArray.length(); i++){
+                JSONObject object1 = jsonArray.getJSONObject(i);
+                System.out.println(object1);
+                int id = object1.getInt("id");
+                int klientId = getKorisnikId().intValue();
+                int terminTreningaId = object1.getJSONObject("terminTreninga").getInt("id");
+                int cena = object1.getInt("cena");
+                TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
+                int salaId = object1.getJSONObject("terminTreninga").getJSONObject("sala").getInt("id");
+                String salaIme = object1.getJSONObject("terminTreninga").getJSONObject("sala").getString("ime");
+                int tipTreningaId = object1.getJSONObject("terminTreninga").getJSONObject("tipTreninga").getInt("id");
+                String tipTreningaNaziv = object1.getJSONObject("terminTreninga").getJSONObject("tipTreninga").getString("naziv");
+                String datum = object1.getJSONObject("terminTreninga").getString("datum").substring(0,10);
+                String vremePocetka = object1.getJSONObject("terminTreninga").getString("vremePocetka");
+                int maksimalanBrojUcesnika = object1.getJSONObject("terminTreninga").getInt("maksimalanBrojUcesnika");
+                int brojUcesnika = object1.getJSONObject("terminTreninga").getInt("brojUcesnika");
+
+                terminTreningaDto.setIdSale((long) salaId);
+                terminTreningaDto.setId((long) terminTreningaId);
+                terminTreningaDto.setIdTreninga((long) tipTreningaId);
+
+                Date date = dateFormat.parse(datum);
+                LocalDate localDate = LocalDate.parse(dateFormat.format(date));
+                localDate = localDate.plusDays(1);
+                date = dateFormat.parse(localDate.toString());
+
+                terminTreningaDto.setDatum(date);
+                terminTreningaDto.setVremePocetka(Time.valueOf(vremePocetka));
+                terminTreningaDto.setMaksimalanBrojUcesnika(maksimalanBrojUcesnika);
+                terminTreningaDto.setNazivTreninga(tipTreningaNaziv);
+                terminTreningaDto.setNazivSale(salaIme);
+                terminTreningaDto.setBrojUcesnika(brojUcesnika);
+
+                ZakazaniTerminDTO zakazaniTerminDTO = new ZakazaniTerminDTO();
+                zakazaniTerminDTO.setId((long) id);
+                zakazaniTerminDTO.setKlijentId(klientId);
+                zakazaniTerminDTO.setCena(cena);
+                zakazaniTerminDTO.setTerminTreningaDto(terminTreningaDto);
+
+                zakazaniTerminListaDto.getContent().add(zakazaniTerminDTO);
+            }return zakazaniTerminListaDto;
+        } catch (InterruptedException | IOException ex) {
+            ex.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
+    public ZakazaniTerminListaDto filtrirajPoNazivu(String naziv){
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/api/termin-treninga/filtrirajPoNazivu"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                .POST(HttpRequest.BodyPublishers.ofString(naziv))
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            JSONArray jsonArray = new JSONArray(response.body());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            ZakazaniTerminListaDto zakazaniTerminListaDto = new ZakazaniTerminListaDto();
+            for (int i = 0 ; i < jsonArray.length(); i++){
+                JSONObject object1 = jsonArray.getJSONObject(i);
+                System.out.println(object1);
+                int id = object1.getInt("id");
+                int klientId = getKorisnikId().intValue();
+                int terminTreningaId = object1.getJSONObject("terminTreninga").getInt("id");
+                int cena = object1.getInt("cena");
+                TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
+                int salaId = object1.getJSONObject("terminTreninga").getJSONObject("sala").getInt("id");
+                String salaIme = object1.getJSONObject("terminTreninga").getJSONObject("sala").getString("ime");
+                int tipTreningaId = object1.getJSONObject("terminTreninga").getJSONObject("tipTreninga").getInt("id");
+                String tipTreningaNaziv = object1.getJSONObject("terminTreninga").getJSONObject("tipTreninga").getString("naziv");
+                String datum = object1.getJSONObject("terminTreninga").getString("datum").substring(0,10);
+                String vremePocetka = object1.getJSONObject("terminTreninga").getString("vremePocetka");
+                int maksimalanBrojUcesnika = object1.getJSONObject("terminTreninga").getInt("maksimalanBrojUcesnika");
+                int brojUcesnika = object1.getJSONObject("terminTreninga").getInt("brojUcesnika");
+
+                terminTreningaDto.setIdSale((long) salaId);
+                terminTreningaDto.setId((long) terminTreningaId);
+                terminTreningaDto.setIdTreninga((long) tipTreningaId);
+
+                Date date = dateFormat.parse(datum);
+                LocalDate localDate = LocalDate.parse(dateFormat.format(date));
+                localDate = localDate.plusDays(1);
+                date = dateFormat.parse(localDate.toString());
+
+                terminTreningaDto.setDatum(date);
+                terminTreningaDto.setVremePocetka(Time.valueOf(vremePocetka));
+                terminTreningaDto.setMaksimalanBrojUcesnika(maksimalanBrojUcesnika);
+                terminTreningaDto.setNazivTreninga(tipTreningaNaziv);
+                terminTreningaDto.setNazivSale(salaIme);
+                terminTreningaDto.setBrojUcesnika(brojUcesnika);
+
+                ZakazaniTerminDTO zakazaniTerminDTO = new ZakazaniTerminDTO();
+                zakazaniTerminDTO.setId((long) id);
+                zakazaniTerminDTO.setKlijentId(klientId);
+                zakazaniTerminDTO.setCena(cena);
+                zakazaniTerminDTO.setTerminTreningaDto(terminTreningaDto);
+
+                zakazaniTerminListaDto.getContent().add(zakazaniTerminDTO);
+            }return zakazaniTerminListaDto;
+        } catch (InterruptedException | IOException ex) {
+            ex.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
+    public void otkaziTermin(ZakazaniTerminDTO zakazaniTerminDTO){
+
+    }
+
+    public ZakazaniTerminDTO dodajTermin(){
+        return null;
     }
 
     private static String mapToJson(Map<String, Object> map) {
