@@ -10,12 +10,11 @@ import org.example.restClient.dto.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MenadzerView extends JPanel {
     private JToolBar toolBar;

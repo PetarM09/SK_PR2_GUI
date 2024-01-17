@@ -248,4 +248,23 @@ public class GymServiceClient {
         }
         return null;
     }
+
+    public void obrisiZakazaniTermin(Long id) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8081/api/termin-treninga/obrisi-termin/" + id))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
+                    .DELETE()
+                    .build();
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.statusCode());
+            System.out.println(response.body());
+            if(response.statusCode() == 200){
+                JOptionPane.showMessageDialog(null, "Uspesno ste obrisali trening");
+            }
+        } catch (IOException | InterruptedException e) {
+        }
+    }
 }
