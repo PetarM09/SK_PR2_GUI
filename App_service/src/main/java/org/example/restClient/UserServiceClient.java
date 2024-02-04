@@ -39,9 +39,9 @@ public class UserServiceClient {
         httpClient = HttpClient.newHttpClient();
     }
 
-    public TerminTreningaListDto getSviZakazaniTreninzi(){
+    public ZakazaniTerminListaDto getSviZakazaniTreninzi(){
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8081/api/termin-treninga/izlistaj-Termine-sve"))
+                .uri(URI.create("http://localhost:8084/gym/api/termin-treninga/izlistaj-Termine-sve"))
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .build();
 
@@ -51,22 +51,25 @@ public class UserServiceClient {
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-            TerminTreningaListDto terminTreningaListDto = new TerminTreningaListDto();
-            for (int i = 0 ; i < jsonArray.length(); i++){
+            ZakazaniTerminListaDto terminTreningaListDto = new ZakazaniTerminListaDto();
+            ZakazaniTerminListaDto zakazaniTerminListaDto = new ZakazaniTerminListaDto();
+            for (int i = 0 ; i < jsonArray.length(); i++) {
                 JSONObject object1 = jsonArray.getJSONObject(i);
+                System.out.println(object1);
                 int id = object1.getInt("id");
+                int klientId = getKorisnikId().intValue();
+                int cena = object1.getInt("cena");
+                TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
                 int salaId = object1.getJSONObject("sala").getInt("id");
                 String salaIme = object1.getJSONObject("sala").getString("ime");
                 int tipTreningaId = object1.getJSONObject("tipTreninga").getInt("id");
                 String tipTreningaNaziv = object1.getJSONObject("tipTreninga").getString("naziv");
-                String datum = object1.getString("datum").substring(0,10);
+                String datum = object1.getString("datum").substring(0, 10);
                 String vremePocetka = object1.getString("vremePocetka");
                 int maksimalanBrojUcesnika = object1.getInt("maksimalanBrojUcesnika");
                 int brojUcesnika = object1.getInt("brojUcesnika");
 
-                TerminTreningaDto terminTreningaDto = new TerminTreningaDto();
                 terminTreningaDto.setIdSale((long) salaId);
-                terminTreningaDto.setId((long) id);
                 terminTreningaDto.setIdTreninga((long) tipTreningaId);
 
                 Date date = dateFormat.parse(datum);
@@ -75,16 +78,21 @@ public class UserServiceClient {
                 date = dateFormat.parse(localDate.toString());
 
                 terminTreningaDto.setDatum(date);
-
                 terminTreningaDto.setVremePocetka(Time.valueOf(vremePocetka));
                 terminTreningaDto.setMaksimalanBrojUcesnika(maksimalanBrojUcesnika);
                 terminTreningaDto.setNazivTreninga(tipTreningaNaziv);
                 terminTreningaDto.setNazivSale(salaIme);
                 terminTreningaDto.setBrojUcesnika(brojUcesnika);
 
-                terminTreningaListDto.getContent().add(terminTreningaDto);
+                ZakazaniTerminDTO zakazaniTerminDTO = new ZakazaniTerminDTO();
+                zakazaniTerminDTO.setId((long) id);
+                zakazaniTerminDTO.setKlijentId(klientId);
+                zakazaniTerminDTO.setCena(cena);
+                zakazaniTerminDTO.setTerminTreningaDto(terminTreningaDto);
+
+                zakazaniTerminListaDto.getContent().add(zakazaniTerminDTO);
             }
-            return terminTreningaListDto;
+            return zakazaniTerminListaDto;
         } catch (InterruptedException | IOException ex) {
             ex.printStackTrace();
         } catch (ParseException e) {
@@ -95,7 +103,7 @@ public class UserServiceClient {
 
     public NotifikacijeListaDto getNotifikacije() {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8082/api/notifikacija/getAllNotifications"))
+                .uri(URI.create("http://localhost:8084/notification/api/notifikacija/getAllNotifications"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .build();
@@ -145,7 +153,7 @@ public class UserServiceClient {
         }
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8082/api/tip_notifikacije/insert"))
+                .uri(URI.create("http://localhost:8084/notification/api/tip_notifikacije/insert"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
@@ -162,7 +170,7 @@ public class UserServiceClient {
     public NotifikacijeListaDto getNotifikacijeById() {
         Long id = getKorisnikId();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8082/api/notifikacija/getNotificationsForClientId/" + id))
+                .uri(URI.create("http://localhost:8084/notification/api/notifikacija/getNotificationsForClientId/" + id))
                 .header("Content-Type", "application/json")
                 .build();
 
@@ -200,7 +208,7 @@ public class UserServiceClient {
 
     public ZakazaniTerminListaDto getTreninziZaKorisnika(){
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8081/api/termin-treninga/izlistaj-Termine-Korisnika"))
+                .uri(URI.create("http://localhost:8084/gym/api/termin-treninga/izlistaj-Termine-Korisnika"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .build();
@@ -261,7 +269,7 @@ public class UserServiceClient {
 
     public TerminTreningaListDto getSviSlobodniTreninzi() {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8081/api/termin-treninga/izlistaj-slobodne-termine"))
+                .uri(URI.create("http://localhost:8084/gym/api/termin-treninga/izlistaj-slobodne-termine"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .build();
@@ -318,7 +326,7 @@ public class UserServiceClient {
         Long id = getKorisnikId();
         KorisnikKlijentDTO korisnikKlijentDTO = new KorisnikKlijentDTO();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/korisnici/getUser/" + id))
+                .uri(URI.create("http://localhost:8084/users/api/korisnici/getUser/" + id))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .build();
@@ -349,7 +357,7 @@ public class UserServiceClient {
 
     public KorisniciListaDto getKorisnici() {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/korisnici"))
+                .uri(URI.create("http://localhost:8084/users/api/korisnici"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .build();
@@ -379,7 +387,7 @@ public class UserServiceClient {
                 korisniciDto.setEmail(email);
 
                 request = HttpRequest.newBuilder()
-                        .uri(URI.create("http://localhost:8080/api/admin/pristupi/" + id))
+                        .uri(URI.create("http://localhost:8084/users/api/admin/pristupi/" + id))
                         .header("Content-Type", "application/json")
                         .build();
                 response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -397,7 +405,7 @@ public class UserServiceClient {
 
     public void zabraniPistup(KorisniciDto korisniciDto){
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/admin/zabrani-pristup/" + korisniciDto.getId()))
+                .uri(URI.create("http://localhost:8084/users/api/admin/zabrani-pristup/" + korisniciDto.getId()))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .POST(HttpRequest.BodyPublishers.ofString(""))
@@ -414,7 +422,7 @@ public class UserServiceClient {
 
     public void odobriPristup(KorisniciDto korisniciDto){
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/admin/odobri-pristup/" + korisniciDto.getId()))
+                .uri(URI.create("http://localhost:8084/users/api/admin/odobri-pristup/" + korisniciDto.getId()))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .POST(HttpRequest.BodyPublishers.ofString(""))
@@ -441,7 +449,7 @@ public class UserServiceClient {
         }
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/profil/promeni-lozinku"))
+                .uri(URI.create("http://localhost:8084/users/api/profil/promeni-lozinku"))
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .header("Content-Type", "application/json")
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -469,7 +477,7 @@ public class UserServiceClient {
             throw new RuntimeException(e);
         }
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/profil"))
+                .uri(URI.create("http://localhost:8084/users/api/profil"))
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .header("Content-Type", "application/json")
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -486,7 +494,7 @@ public class UserServiceClient {
 
     public Long getKorisnikId(){
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/korisnici/getUserID"))
+                .uri(URI.create("http://localhost:8084/users/api/korisnici/getUserID"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .build();
@@ -519,7 +527,7 @@ public class UserServiceClient {
             String jsonBody = mapToJson(requestData);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/korisnici/register-user"))
+                    .uri(URI.create("http://localhost:8084/users/api/korisnici/register-user"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                     .build();
@@ -547,7 +555,7 @@ public class UserServiceClient {
             String jsonBody = mapToJson(requestData);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/korisnici/register-manager"))
+                    .uri(URI.create("http://localhost:8084/users/api/korisnici/register-manager"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                     .build();
@@ -567,7 +575,7 @@ public class UserServiceClient {
 
     public ZakazaniTerminListaDto filtrirajPoDanu(String dan){
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8081/api/termin-treninga/filtirajPoDanu"))
+                .uri(URI.create("http://localhost:8084/gym/api/termin-treninga/filtirajPoDanu"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .POST(HttpRequest.BodyPublishers.ofString(dan))
@@ -630,7 +638,7 @@ public class UserServiceClient {
 
     public ZakazaniTerminListaDto filtrirajPoTipu(String tip){
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8081/api/termin-treninga/filtirajPoIndividualni-Grupni"))
+                .uri(URI.create("http://localhost:8084/gym/api/termin-treninga/filtirajPoIndividualni-Grupni"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .POST(HttpRequest.BodyPublishers.ofString(tip))
@@ -693,7 +701,7 @@ public class UserServiceClient {
 
     public ZakazaniTerminListaDto filtrirajPoNazivu(String naziv){
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8081/api/termin-treninga/filtrirajPoNazivu"))
+                .uri(URI.create("http://localhost:8084/gym/api/termin-treninga/filtrirajPoNazivu"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .POST(HttpRequest.BodyPublishers.ofString(naziv))

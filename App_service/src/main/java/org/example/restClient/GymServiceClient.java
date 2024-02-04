@@ -33,7 +33,7 @@ public class GymServiceClient {
 
     public FiskulturnaSalaDTO getPodaciFiskulturnaSala() {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8081/api/fiskulturne-sale/vrati-salu"))
+                .uri(URI.create("http://localhost:8084/gym/api/fiskulturne-sale/vrati-salu"))
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .build();
         HttpResponse<String> response = null;
@@ -50,7 +50,7 @@ public class GymServiceClient {
         try {
             String requestBody = objectMapper.writeValueAsString(fiskulturnaSalaDTO);
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/api/fiskulturne-sale/sacuvaj-ili-azuriraj"))
+                    .uri(URI.create("http://localhost:8084/gym/api/fiskulturne-sale/sacuvaj-ili-azuriraj"))
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                     .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(fiskulturnaSalaDTO)))
@@ -69,7 +69,7 @@ public class GymServiceClient {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/api/termin-treninga/zakazi-termin/"))
+                    .uri(URI.create("http://localhost:8084/gym/api/termin-treninga/zakazi-termin/"))
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                     .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(terminTreningaDto)))
@@ -90,7 +90,7 @@ public class GymServiceClient {
             ObjectMapper objectMapper = new ObjectMapper();
             System.out.println(objectMapper.writeValueAsString(zakazaniTerminDTO));
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/api/termin-treninga/otkaziTermin"))
+                    .uri(URI.create("http://localhost:8084/gym/api/termin-treninga/otkaziTermin"))
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                     .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(zakazaniTerminDTO)))
@@ -108,7 +108,7 @@ public class GymServiceClient {
     public ZakazaniTerminListaDto getZauzetiZaSalu() {
         String imeSale = getImeSale();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(URI.create("http://localhost:8081/api/termin-treninga/izlistaj-zauzete-termine-za-salu") + "/" + imeSale))
+                .uri(URI.create(URI.create("http://localhost:8084/gym/api/termin-treninga/izlistaj-zauzete-termine-za-salu") + "/" + imeSale))
                 .build();
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -168,7 +168,7 @@ public class GymServiceClient {
     public TerminTreningaListDto getSlobodniZaSalu() {
         String imeSale = getImeSale();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(URI.create("http://localhost:8081/api/termin-treninga/izlizstaj-slobodno-za-salu") + "/" + imeSale))
+                .uri(URI.create(URI.create("http://localhost:8084/gym/api/termin-treninga/izlizstaj-slobodno-za-salu") + "/" + imeSale))
                 .build();
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -222,7 +222,7 @@ public class GymServiceClient {
     private String getImeSale(){
         Long id = getIdKorisnika();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/korisnici/getImeSale/" + id))
+                .uri(URI.create("http://localhost:8084/users/api/korisnici/getImeSale/" + id))
                 .build();
         HttpResponse<String> response = null;
         try {
@@ -237,7 +237,7 @@ public class GymServiceClient {
 
     private Long getIdKorisnika(){
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/korisnici/getUserID"))
+                .uri(URI.create("http://localhost:8084/users/api/korisnici/getUserID"))
                 .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                 .build();
         HttpResponse<String> response = null;
@@ -254,7 +254,7 @@ public class GymServiceClient {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/api/termin-treninga/obrisi-termin/" + id))
+                    .uri(URI.create("http://localhost:8084/gym/api/termin-treninga/obrisi-termin/" + id))
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                     .DELETE()
@@ -273,7 +273,7 @@ public class GymServiceClient {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/api/termin-treninga/dodaj-termin"))
+                    .uri(URI.create("http://localhost:8084/gym/api/termin-treninga/dodaj-termin"))
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer " + MyApp.getInstance().getToken())
                     .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(terminTreningaDto)))

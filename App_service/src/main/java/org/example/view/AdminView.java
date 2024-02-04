@@ -4,6 +4,7 @@ import org.example.MyApp;
 import org.example.model.KorisniciModel;
 import org.example.model.NotifikacijeModel;
 import org.example.model.TerminiTableModel;
+import org.example.model.ZakazaniTableModel;
 import org.example.restClient.UserServiceClient;
 import org.example.restClient.dto.*;
 
@@ -26,6 +27,7 @@ public class AdminView extends JPanel {
     private TerminiTableModel terminiTableModel;
     private KorisniciModel korisniciTableModel;
     private NotifikacijeModel notifikacijeModel;
+    private ZakazaniTableModel zakazaniTableModel;
 
     private JSplitPane leftSplit;
 
@@ -36,6 +38,7 @@ public class AdminView extends JPanel {
         this.terminiTableModel = new TerminiTableModel();
         this.korisniciTableModel = new KorisniciModel();
         this.notifikacijeModel = new NotifikacijeModel();
+        this.zakazaniTableModel = new ZakazaniTableModel();
         userServiceClient = new UserServiceClient();
 
         this.toolBar = new Toolbar();
@@ -60,18 +63,19 @@ public class AdminView extends JPanel {
 
 
     public void initZauzetiTerminListTable() throws IOException {
-        TerminTreningaListDto terminTreningaListDto = userServiceClient.getSviZakazaniTreninzi();
-        terminiTableModel.removeRows();
-        terminiTableModel.getTerminTreningaListDto().getContent().clear();
-        terminTreningaListDto.getContent().forEach(terminTreningaDto -> {
-            terminiTableModel.addRow(new Object[]{
-                    terminTreningaDto.getNazivSale(),
-                    terminTreningaDto.getNazivTreninga(),
-                    terminTreningaDto.getDatum(),
-                    terminTreningaDto.getVremePocetka(),
-                    terminTreningaDto.getMaksimalanBrojUcesnika()});
+        ZakazaniTerminListaDto zakazaniTerminListaDto = userServiceClient.getSviZakazaniTreninzi();
+        zakazaniTableModel.removeRows();
+        zakazaniTableModel.getZakazaniTerminListaDto().getContent().clear();
+        zakazaniTerminListaDto.getContent().forEach(zakazaniTerminDto -> {
+            zakazaniTableModel.addRow(new Object[]{
+                    zakazaniTerminDto.getId(),
+                    zakazaniTerminDto.getTerminTreningaDto().getNazivSale(),
+                    zakazaniTerminDto.getCena(),
+                    zakazaniTerminDto.getKlijentId(),
+                    zakazaniTerminDto.getTerminTreningaDto().getDatum(),
+                    zakazaniTerminDto.getTerminTreningaDto().getVremePocetka()});
         });
-        jTable.setModel(terminiTableModel);
+        jTable.setModel(zakazaniTableModel);
         MyApp.getInstance().refreshPanel();
     }
     public void initSlobodniTerminiListTable() {
